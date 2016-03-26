@@ -91,9 +91,9 @@ public class MainApplication extends Application {
         blueMaterial.setDiffuseColor(Color.DARKBLUE);
         blueMaterial.setSpecularColor(Color.BLUE);
 
-        final Box xAxis = new Box(AXIS_LENGTH, 0.1, 0.1);
-        final Box yAxis = new Box(0.1, AXIS_LENGTH, 0.1);
-        final Box zAxis = new Box(0.1, 0.1, AXIS_LENGTH);
+        final Box xAxis = new Box(AXIS_LENGTH, 0.5, 0.5);
+        final Box yAxis = new Box(0.5, AXIS_LENGTH, 0.5);
+        final Box zAxis = new Box(0.5, 0.5, AXIS_LENGTH);
 
         xAxis.setMaterial(redMaterial);
         yAxis.setMaterial(greenMaterial);
@@ -341,7 +341,7 @@ public class MainApplication extends Application {
 
         double l = Math.sqrt((20 - 0) * (20 - 0) + (20 - 0) * (20 - 0) + (20 - 0) * (20 - 0));
 
-        Box bar1 = new Box(1, l, 1);
+        Box bar1 = new Box(l, 1, 1);
         bar1.setTranslateX(10);
         bar1.setTranslateY(10);
         bar1.setTranslateZ(10);
@@ -349,24 +349,30 @@ public class MainApplication extends Application {
         double X = Math.abs(0 - 20);
         double Y = Math.abs(0 - 20);
         double Z = Math.abs(0 - 20);
+//
+        double uvx = (X / l);
+        double uvy = (Y / l);
+        double uvz = (Z / l);
+//
+        double rlx = X * uvx;
+        double rly = Y * uvy;
+//        double rlz = Z * uvz;
+//
+//
+//        double a = Math.toDegrees(Math.acos(X / l));
+//        double b = Math.toDegrees(Math.asin(Y / l));
+//        double c = Math.toDegrees(Math.asin(Z / l));
+//
+//
+//        Rotate rxBox = new Rotate(78, Rotate.X_AXIS);
+//        Rotate ryBox = new Rotate(38, Rotate.Y_AXIS);
+//        Rotate rzBox = new Rotate(-47, Rotate.Z_AXIS);
 
-        double cosa = X / Math.sqrt(X * X + Y * Y + Z * Z);
-        double cosb = Y / Math.sqrt(X * X + Y * Y + Z * Z);
-        double cosc = Z / Math.sqrt(X * X + Y * Y + Z * Z);
-
-        double cosd = Math.acos(cosa);
-        double cose = Math.acos(cosb);
-        double cosf = Math.acos(cosc);
-
-        Rotate rxBox = new Rotate((cosd * 180 / Math.PI), Rotate.X_AXIS);
-        Rotate ryBox = new Rotate((cose * 180 / Math.PI), Rotate.Y_AXIS);
-        Rotate rzBox = new Rotate(-(cosf * 180 / Math.PI), Rotate.Z_AXIS);
-
-        rxBox.setAngle(78);
-        ryBox.setAngle(37);
-        rzBox.setAngle(-47);
-
-        bar1.getTransforms().addAll(rxBox, ryBox, rzBox);
+//        Rotate rxBox = new Rotate(45, Rotate.X_AXIS);
+//        Rotate ryBox = new Rotate(0, Rotate.Y_AXIS);
+//        Rotate rzBox = new Rotate(45, Rotate.Z_AXIS);
+//
+//        bar1.getTransforms().addAll(rxBox, ryBox, rzBox);
         world.getChildren().add(bar1);
         world.getChildren().add(testGroup);
 
