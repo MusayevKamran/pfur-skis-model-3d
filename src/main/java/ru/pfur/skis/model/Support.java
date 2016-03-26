@@ -1,4 +1,4 @@
-package ru.pfur.skis.model.model;
+package ru.pfur.skis.model;
 
 /**
  * Created by Kamran on 3/19/2016.

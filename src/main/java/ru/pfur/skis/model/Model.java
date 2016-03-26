@@ -3,14 +3,15 @@
 // (powered by Fernflower decompiler)
 //
 
-package ru.pfur.skis.model.model;
+package ru.pfur.skis.model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class Model {
-    public ArrayList<Node> nodes = new ArrayList();
-    public ArrayList<Bar> bars = new ArrayList();
+    private List<Node> nodes = new ArrayList();
+    private List<Bar> bars = new ArrayList();
 
     public Model() {
     }
@@ -45,5 +46,21 @@ public class Model {
 
             tmp.add(bar);
         }
+    }
+
+    public List<Node> getNodes() {
+        return nodes;
+    }
+
+    public void setNodes(List<Node> nodes) {
+        this.nodes = nodes;
+    }
+
+    public List<Bar> getBars() {
+        return bars;
+    }
+
+    public void setBars(List<Bar> bars) {
+        this.bars = bars;
     }
 }
