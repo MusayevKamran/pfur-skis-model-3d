@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ru.pfur.skis;
+package ru.pfur.test;
 
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;

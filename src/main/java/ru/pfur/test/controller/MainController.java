@@ -1,4 +1,4 @@
-package ru.pfur.skis.controller;
+package ru.pfur.test.controller;
 
 /**
  * Created by Art on 10.03.16.

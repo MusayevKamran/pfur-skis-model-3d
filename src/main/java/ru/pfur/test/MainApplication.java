@@ -1,4 +1,4 @@
-package ru.pfur.skis;/**
+package ru.pfur.test;/**
  * Created by Art on 10.03.16.
  */
 
@@ -80,7 +80,7 @@ public class MainApplication extends Application {
     private void buildAxes() {
         System.out.println("buildAxes()");
         final PhongMaterial redMaterial = new PhongMaterial();
-        redMaterial.setDiffuseColor(Color.AQUA);
+        redMaterial.setDiffuseColor(Color.DARKRED);
         redMaterial.setSpecularColor(Color.RED);
 
         final PhongMaterial greenMaterial = new PhongMaterial();
@@ -91,9 +91,9 @@ public class MainApplication extends Application {
         blueMaterial.setDiffuseColor(Color.DARKBLUE);
         blueMaterial.setSpecularColor(Color.BLUE);
 
-        final Box xAxis = new Box(AXIS_LENGTH, 0.1, 0.1);
-        final Box yAxis = new Box(0.1, AXIS_LENGTH, 0.1);
-        final Box zAxis = new Box(0.1, 0.1, AXIS_LENGTH);
+        final Box xAxis = new Box(AXIS_LENGTH, 0.5, 0.5);
+        final Box yAxis = new Box(0.5, AXIS_LENGTH, 0.5);
+        final Box zAxis = new Box(0.5, 0.5, AXIS_LENGTH);
 
         xAxis.setMaterial(redMaterial);
         yAxis.setMaterial(greenMaterial);
@@ -243,7 +243,8 @@ public class MainApplication extends Application {
         Sphere oxygenSphere = new Sphere(40.0);
         oxygenSphere.setMaterial(redMaterial);
 
-        Sphere hydrogen1Sphere = new Sphere(30.0);
+        Sphere hydrogen1Sphere =
+                new Sphere(30.0);
         hydrogen1Sphere.setMaterial(whiteMaterial);
         hydrogen1Sphere.setTranslateX(0.0);
 
@@ -315,20 +316,83 @@ public class MainApplication extends Application {
         redMaterial.setDiffuseColor(Color.DARKRED);
         redMaterial.setSpecularColor(Color.RED);
 
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                for (int z = 0; z < 10; z++) {
-                    Box t = new Box(1, 1, 1);
-                    t.setTranslateX(i * 20);
-                    t.setTranslateY(j * 20);
-                    t.setTranslateZ(z * 20);
-                    t.setMaterial(redMaterial);
-                    testGroup.getChildren().add(t);
-                }
-            }
-        }
+//        for (int i = 0; i < 10; i++) {
+//            for (int j = 0; j < 10; j++) {
+//                for (int z = 0; z < 10; z++) {
+//                    Box t = new Box(1, 1, 1);
+//                    t.setTranslateX(i * 20);
+//                    t.setTranslateY(j * 20);
+//                    t.setTranslateZ(z * 20);
+//                    t.setMaterial(redMaterial);
+//                    testGroup.getChildren().add(t);
+//                }
+//            }
+//        }
+        Box t1 = new Box(1, 1, 1);
 
+        t1.setMaterial(redMaterial);
+        testGroup.getChildren().add(t1);
+        Box t = new Box(1, 1, 1);
+        t.setTranslateX(20);
+        t.setTranslateY(20);
+        t.setTranslateZ(20);
+        t.setMaterial(redMaterial);
+        testGroup.getChildren().add(t);
+
+        double l = Math.sqrt((20 - 0) * (20 - 0) + (20 - 0) * (20 - 0) + (20 - 0) * (20 - 0));
+
+        Box bar1 = new Box(l, 1, 1);
+        bar1.setTranslateX(10);
+        bar1.setTranslateY(10);
+        bar1.setTranslateZ(10);
+
+        double X = Math.abs(0 - 20);
+        double Y = Math.abs(0 - 20);
+        double Z = Math.abs(0 - 20);
+//
+        double uvx = (X / l);
+        double uvy = (Y / l);
+        double uvz = (Z / l);
+//
+        double rlx = X * uvx;
+        double rly = Y * uvy;
+//        double rlz = Z * uvz;
+//
+//
+//        double a = Math.toDegrees(Math.acos(X / l));
+//        double b = Math.toDegrees(Math.asin(Y / l));
+//        double c = Math.toDegrees(Math.asin(Z / l));
+//
+//
+//        Rotate rxBox = new Rotate(78, Rotate.X_AXIS);
+//        Rotate ryBox = new Rotate(38, Rotate.Y_AXIS);
+//        Rotate rzBox = new Rotate(-47, Rotate.Z_AXIS);
+
+//        Rotate rxBox = new Rotate(45, Rotate.X_AXIS);
+//        Rotate ryBox = new Rotate(0, Rotate.Y_AXIS);
+//        Rotate rzBox = new Rotate(45, Rotate.Z_AXIS);
+//
+//        bar1.getTransforms().addAll(rxBox, ryBox, rzBox);
+        world.getChildren().add(bar1);
         world.getChildren().add(testGroup);
+
+    }
+
+    private void calc(Node n, double x0, double x1, double y0, double y1, double z0, double z1) {
+        double X = Math.abs(x0 - x1);
+        double Y = Math.abs(y0 - y1);
+        double Z = Math.abs(z0 - z1);
+
+        double cosa = X / Math.sqrt(X * X + Y * Y + Z * Z);
+        double cosb = Y / Math.sqrt(X * X + Y * Y + Z * Z);
+        double cosc = Z / Math.sqrt(X * X + Y * Y + Z * Z);
+
+        n.setRotationAxis(Rotate.X_AXIS);
+        n.setRotate(-(cosa * 180 / Math.PI) + 90);
+        n.setRotationAxis(Rotate.Y_AXIS);
+        n.setRotate(-(cosb * 180 / Math.PI) - 90);
+        n.setRotationAxis(Rotate.Z_AXIS);
+        n.setRotate(-(cosc * 180 / Math.PI) - 90);
 
     }
 }
