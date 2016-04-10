@@ -4,17 +4,20 @@ package ru.pfur.test;/**
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.geometry.Point3D;
 import javafx.scene.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.PickResult;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Shape3D;
-import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 
 public class MainApplication extends Application {
@@ -204,85 +207,7 @@ public class MainApplication extends Application {
         });
     }
 
-    private void buildMolecule() {
-        //======================================================================
-        // THIS IS THE IMPORTANT MATERIAL FOR THE TUTORIAL
-        //======================================================================
 
-        final PhongMaterial redMaterial = new PhongMaterial();
-        redMaterial.setDiffuseColor(Color.DARKRED);
-        redMaterial.setSpecularColor(Color.RED);
-
-        final PhongMaterial whiteMaterial = new PhongMaterial();
-        whiteMaterial.setDiffuseColor(Color.WHITE);
-        whiteMaterial.setSpecularColor(Color.LIGHTBLUE);
-
-        final PhongMaterial greyMaterial = new PhongMaterial();
-        greyMaterial.setDiffuseColor(Color.DARKGREY);
-        greyMaterial.setSpecularColor(Color.GREY);
-
-        // Molecule Hierarchy
-        // [*] moleculeXform
-        //     [*] oxygenXform
-        //         [*] oxygenSphere
-        //     [*] hydrogen1SideXform
-        //         [*] hydrogen1Xform
-        //             [*] hydrogen1Sphere
-        //         [*] bond1Cylinder
-        //     [*] hydrogen2SideXform
-        //         [*] hydrogen2Xform
-        //             [*] hydrogen2Sphere
-        //         [*] bond2Cylinder
-        Xform moleculeXform = new Xform();
-        Xform oxygenXform = new Xform();
-        Xform hydrogen1SideXform = new Xform();
-        Xform hydrogen1Xform = new Xform();
-        Xform hydrogen2SideXform = new Xform();
-        Xform hydrogen2Xform = new Xform();
-
-        Sphere oxygenSphere = new Sphere(40.0);
-        oxygenSphere.setMaterial(redMaterial);
-
-        Sphere hydrogen1Sphere =
-                new Sphere(30.0);
-        hydrogen1Sphere.setMaterial(whiteMaterial);
-        hydrogen1Sphere.setTranslateX(0.0);
-
-        Sphere hydrogen2Sphere = new Sphere(30.0);
-        hydrogen2Sphere.setMaterial(whiteMaterial);
-        hydrogen2Sphere.setTranslateZ(0.0);
-
-        Cylinder bond1Cylinder = new Cylinder(5, 100);
-        bond1Cylinder.setMaterial(greyMaterial);
-        bond1Cylinder.setTranslateX(50.0);
-        bond1Cylinder.setRotationAxis(Rotate.Z_AXIS);
-        bond1Cylinder.setRotate(90.0);
-
-        Cylinder bond2Cylinder = new Cylinder(5, 100);
-        bond2Cylinder.setMaterial(greyMaterial);
-        bond2Cylinder.setTranslateX(50.0);
-        bond2Cylinder.setRotationAxis(Rotate.Z_AXIS);
-        bond2Cylinder.setRotate(90.0);
-
-        moleculeXform.getChildren().add(oxygenXform);
-        moleculeXform.getChildren().add(hydrogen1SideXform);
-        moleculeXform.getChildren().add(hydrogen2SideXform);
-        oxygenXform.getChildren().add(oxygenSphere);
-        hydrogen1SideXform.getChildren().add(hydrogen1Xform);
-        hydrogen2SideXform.getChildren().add(hydrogen2Xform);
-        hydrogen1Xform.getChildren().add(hydrogen1Sphere);
-        hydrogen2Xform.getChildren().add(hydrogen2Sphere);
-        hydrogen1SideXform.getChildren().add(bond1Cylinder);
-        hydrogen2SideXform.getChildren().add(bond2Cylinder);
-
-        hydrogen1Xform.setTx(100.0);
-        hydrogen2Xform.setTx(100.0);
-        hydrogen2SideXform.setRotateY(HYDROGEN_ANGLE);
-        moleculeGroup.setVisible(false);
-        moleculeGroup.getChildren().add(moleculeXform);
-
-        world.getChildren().addAll(moleculeGroup);
-    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -296,11 +221,28 @@ public class MainApplication extends Application {
         // buildScene();
         buildCamera();
         buildAxes();
-        buildMolecule();
         buildTest();
+
 
         Scene scene = new Scene(root, 1024, 768, true);
         scene.setFill(Color.GREY);
+
+        AnchorPane anchorPane = new AnchorPane();
+        ListView list = new ListView();
+        AnchorPane.setTopAnchor(list, 10.0);
+        AnchorPane.setLeftAnchor(list, 10.0);
+        AnchorPane.setRightAnchor(list, 65.0);
+
+        Button button = new Button("Add");
+        AnchorPane.setTopAnchor(button, 10.0);
+        AnchorPane.setRightAnchor(button, 10.0);
+        anchorPane.getChildren().addAll(list, button);
+
+        Button b = new Button("Test");
+        anchorPane.getChildren().add(b);
+
+
+        root.getChildren().addAll(anchorPane);
         handleKeyboard(scene, world);
         handleMouse(scene, world);
 
@@ -311,88 +253,130 @@ public class MainApplication extends Application {
         scene.setCamera(camera);
     }
 
+
+    public void createBar(Xform world, double x1, double y1, double z1, double x2, double y2, double z2) {
+
+        Box t1 = new Box(1, 1, 1);
+        t1.setTranslateX(x1);
+        t1.setTranslateY(y1);
+        t1.setTranslateZ(z1);
+        testGroup.getChildren().add(t1);
+
+        Box t2 = new Box(1, 1, 1);
+        t2.setTranslateX(x2);
+        t2.setTranslateY(y2);
+        t2.setTranslateZ(z2);
+        testGroup.getChildren().add(t2);
+
+        Point3D p1 = new Point3D(x1, y1, z1);
+        Point3D p2 = new Point3D(x2, y2, z2);
+        Box cc = (Box) createConnection(p1, p2);
+        world.getChildren().add(t1);
+        world.getChildren().add(t2);
+        world.getChildren().add(cc);
+        System.out.println(p2.angle(p1));
+
+
+    }
+
+    public void setCordinateIBeam(Xform world, double x1, double y1, double z1, double x2, double y2, double z2) {
+
+        Box t1 = new Box(1, 1, 1);
+        t1.setTranslateX(x1);
+        t1.setTranslateY(y1);
+        t1.setTranslateZ(z1);
+        testGroup.getChildren().add(t1);
+
+        Box t2 = new Box(1, 1, 1);
+        t2.setTranslateX(x2);
+        t2.setTranslateY(y2);
+        t2.setTranslateZ(z2);
+        testGroup.getChildren().add(t2);
+
+        Point3D p1 = new Point3D(x1, y1, z1);
+        Point3D p2 = new Point3D(x2, y2, z2);
+        createConnectionIbeams(world, p1, p2);
+        world.getChildren().add(t1);
+        world.getChildren().add(t2);
+        //world.getChildren().add(cc);
+        System.out.println(p2.angle(p1));
+
+
+    }
+
     private void buildTest() {
+
         final PhongMaterial redMaterial = new PhongMaterial();
         redMaterial.setDiffuseColor(Color.DARKRED);
         redMaterial.setSpecularColor(Color.RED);
 
-//        for (int i = 0; i < 10; i++) {
-//            for (int j = 0; j < 10; j++) {
-//                for (int z = 0; z < 10; z++) {
-//                    Box t = new Box(1, 1, 1);
-//                    t.setTranslateX(i * 20);
-//                    t.setTranslateY(j * 20);
-//                    t.setTranslateZ(z * 20);
-//                    t.setMaterial(redMaterial);
-//                    testGroup.getChildren().add(t);
-//                }
-//            }
-//        }
-        Box t1 = new Box(1, 1, 1);
+        setCordinateIBeam(world, 0, 0, 0, 20, 30, 30);
+//        setCordinateIBeam(world, 30, 30, 30, 30, 0, 30);
+//        setCordinateIBeam(world, 30, 0, 30, 0, 0, 30);
+//        setCordinateIBeam(world, 30, 0, 0, 30, 30, 0);
+//        setCordinateIBeam(world, 30, 15, 40, 12, 55, 43);
+//        setCordinateIBeam(world, 0, 35, 29, 40, 33, 15);
+//        setCordinateIBeam(world, 50, 5, 29, 62, 45, 33);
 
-        t1.setMaterial(redMaterial);
-        testGroup.getChildren().add(t1);
-        Box t = new Box(1, 1, 1);
-        t.setTranslateX(20);
-        t.setTranslateY(20);
-        t.setTranslateZ(20);
-        t.setMaterial(redMaterial);
-        testGroup.getChildren().add(t);
+//        setCordinate(world, 0, 0, 0, 30, 30, 30);
+//        setCordinate(world, 30, 30, 30, 30, 0, 30);
+//        setCordinate(world, 30, 0, 30, 0, 0, 30);
+//        setCordinate(world, 30, 0, 0, 30, 30, 0);
 
-        double l = Math.sqrt((20 - 0) * (20 - 0) + (20 - 0) * (20 - 0) + (20 - 0) * (20 - 0));
-
-        Box bar1 = new Box(l, 1, 1);
-        bar1.setTranslateX(10);
-        bar1.setTranslateY(10);
-        bar1.setTranslateZ(10);
-
-        double X = Math.abs(0 - 20);
-        double Y = Math.abs(0 - 20);
-        double Z = Math.abs(0 - 20);
-//
-        double uvx = (X / l);
-        double uvy = (Y / l);
-        double uvz = (Z / l);
-//
-        double rlx = X * uvx;
-        double rly = Y * uvy;
-//        double rlz = Z * uvz;
-//
-//
-//        double a = Math.toDegrees(Math.acos(X / l));
-//        double b = Math.toDegrees(Math.asin(Y / l));
-//        double c = Math.toDegrees(Math.asin(Z / l));
-//
-//
-//        Rotate rxBox = new Rotate(78, Rotate.X_AXIS);
-//        Rotate ryBox = new Rotate(38, Rotate.Y_AXIS);
-//        Rotate rzBox = new Rotate(-47, Rotate.Z_AXIS);
-
-//        Rotate rxBox = new Rotate(45, Rotate.X_AXIS);
-//        Rotate ryBox = new Rotate(0, Rotate.Y_AXIS);
-//        Rotate rzBox = new Rotate(45, Rotate.Z_AXIS);
-//
-//        bar1.getTransforms().addAll(rxBox, ryBox, rzBox);
-        world.getChildren().add(bar1);
-        world.getChildren().add(testGroup);
 
     }
 
-    private void calc(Node n, double x0, double x1, double y0, double y1, double z0, double z1) {
-        double X = Math.abs(x0 - x1);
-        double Y = Math.abs(y0 - y1);
-        double Z = Math.abs(z0 - z1);
+    public Shape3D createConnection(Point3D origin, Point3D target) {
+        Point3D yAxis = new Point3D(0, 1, 0);
+        Point3D diff = target.subtract(origin);
+        double height = diff.magnitude();
 
-        double cosa = X / Math.sqrt(X * X + Y * Y + Z * Z);
-        double cosb = Y / Math.sqrt(X * X + Y * Y + Z * Z);
-        double cosc = Z / Math.sqrt(X * X + Y * Y + Z * Z);
+        Point3D mid = target.midpoint(origin);
+        Translate moveToMidpoint = new Translate(mid.getX(), mid.getY(), mid.getZ());
 
-        n.setRotationAxis(Rotate.X_AXIS);
-        n.setRotate(-(cosa * 180 / Math.PI) + 90);
-        n.setRotationAxis(Rotate.Y_AXIS);
-        n.setRotate(-(cosb * 180 / Math.PI) - 90);
-        n.setRotationAxis(Rotate.Z_AXIS);
-        n.setRotate(-(cosc * 180 / Math.PI) - 90);
+        Point3D axisOfRotation = diff.crossProduct(yAxis);
+        double angle = Math.acos(diff.normalize().dotProduct(yAxis));
+        Rotate rotateAroundCenter = new Rotate(-Math.toDegrees(angle), axisOfRotation);
+
+        Shape3D line = new Box(.5, height, .5);
+
+        line.getTransforms().addAll(moveToMidpoint, rotateAroundCenter);
+
+        return line;
+    }
+
+    public void createConnectionIbeams(Xform world, Point3D origin, Point3D target) {
+        Point3D yAxis = new Point3D(0, 1, 0);
+        Point3D diff = target.subtract(origin);
+        double height = diff.magnitude();
+
+        Point3D mid = target.midpoint(origin);
+        Translate moveToMidpoint = new Translate(mid.getX(), mid.getY(), mid.getZ());
+
+        Point3D axisOfRotation = diff.crossProduct(yAxis);
+        double angle = Math.acos(diff.normalize().dotProduct(yAxis));
+        Rotate rotateAroundCenter = new Rotate(-Math.toDegrees(angle), axisOfRotation);
+
+        Shape3D line1 = new Box(0.5, height, 2);
+        line1.setTranslateX(1);
+        Shape3D line2 = new Box(2, height, 0.5);
+        Shape3D line3 = new Box(0.5, height, 2);
+        line3.setTranslateX(-1);
+
+        Xform iBeam = new Xform();
+        iBeam.getChildren().add(line1);
+        iBeam.getChildren().add(line2);
+        iBeam.getChildren().add(line3);
+
+        System.out.println(-Math.toDegrees(angle));
+
+        Rotate opositerotateAroundCenter = new Rotate(-45, Rotate.Y_AXIS);
+
+        iBeam.getTransforms().addAll(moveToMidpoint, rotateAroundCenter);
+        iBeam.getTransforms().add(opositerotateAroundCenter);
+        world.getChildren().add(iBeam);
 
     }
+
+
 }
