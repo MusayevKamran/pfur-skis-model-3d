@@ -9,7 +9,7 @@ public class RedoCommand extends AbstractCommand implements Redo {
 
     public RedoCommand(Model model) {
         super(model);
-        AbstractCommand.manager.invokeCommand(this);
+        manager.invokeCommand(this);
     }
 
     @Override

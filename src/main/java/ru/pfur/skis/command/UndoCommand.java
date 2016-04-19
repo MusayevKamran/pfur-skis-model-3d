@@ -10,7 +10,7 @@ public class UndoCommand extends AbstractCommand implements Undo {
 
     public UndoCommand(Model model) {
         super(model);
-        AbstractCommand.manager.invokeCommand(this);
+        manager.invokeCommand(this);
     }
 
     /*
