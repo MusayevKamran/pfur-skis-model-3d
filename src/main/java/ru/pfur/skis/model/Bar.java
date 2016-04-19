@@ -10,10 +10,23 @@ public class Bar {
     public double area;
     public double eModulus;
     public double i;
+    public Stiffness stiffness = null;
 
 
     public Bar(Node nodeStart, Node nodeEnd) {
         this.nodeStart = nodeStart;
         this.nodeEnd = nodeEnd;
+    }
+
+    public void removeStiffness() {
+        stiffness = null;
+    }
+
+    public Stiffness getStiffness() {
+        return stiffness;
+    }
+
+    public void setStiffness(Stiffness stiffness) {
+        this.stiffness = stiffness;
     }
 }

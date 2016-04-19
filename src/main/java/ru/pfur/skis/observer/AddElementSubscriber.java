@@ -7,9 +7,9 @@ import ru.pfur.skis.model.Node;
 /**
  * Created by Kamran on 4/2/2016.
  */
-public interface RemoveElementSubscriber {
+public interface AddElementSubscriber {
 
-    void removeNode(Model model, Node node);
+    void addNode(Model model, Node node);
 
-    void removeBar(Model model, Bar bar);
+    void addBar(Model model, Bar bar);
 }

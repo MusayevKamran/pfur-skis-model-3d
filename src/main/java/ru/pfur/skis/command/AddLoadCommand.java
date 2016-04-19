@@ -1,39 +1,39 @@
-/**
- *
- */
 package ru.pfur.skis.command;
 
+import ru.pfur.skis.model.Load;
 import ru.pfur.skis.model.Model;
 import ru.pfur.skis.model.Node;
 
-public class AddNodeCommand extends AbstractCommand implements Command {
-    private Node node = null;
 
-    public AddNodeCommand(Model model, Node node) {
+public class AddLoadCommand extends AbstractCommand implements Command {
+    private Node node = null;
+    private Load load = null;
+
+
+    public AddLoadCommand(Model model, Node node, Load load) {
         super(model);
         this.node = node;
-        manager.invokeCommand(this);
+        this.load = load;
     }
 
     @Override
     public boolean execute() {
         try {
-            model.addNode(node);
-            return true;
-        } catch (Exception e) {
+            node.setLoad(load);
             return false;
+        } catch (Exception e) {
+            return true;
         }
     }
 
     @Override
     public boolean unExecute() {
         try {
-            model.removeNode(node);
+            node.removeLoad();
             return true;
         } catch (Exception e) {
             return false;
         }
-
     }
-
 }
+

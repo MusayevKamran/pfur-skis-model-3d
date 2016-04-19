@@ -6,12 +6,9 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.PickResult;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -19,6 +16,7 @@ import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
+
 
 public class MainApplication extends Application {
 
@@ -218,6 +216,7 @@ public class MainApplication extends Application {
         root.getChildren().add(world);
         root.setDepthTest(DepthTest.ENABLE);
 
+
         // buildScene();
         buildCamera();
         buildAxes();
@@ -226,31 +225,32 @@ public class MainApplication extends Application {
 
         Scene scene = new Scene(root, 1024, 768, true);
         scene.setFill(Color.GREY);
+//
+//        AnchorPane anchorPane = new AnchorPane();
+//        ListView list = new ListView();
+//        AnchorPane.setTopAnchor(list, 10.0);
+//        AnchorPane.setLeftAnchor(list, 10.0);
+//        AnchorPane.setRightAnchor(list, 65.0);
+//
+//        Button button = new Button("Add");
+//        AnchorPane.setTopAnchor(button, 10.0);
+//        AnchorPane.setRightAnchor(button, 10.0);
+//        anchorPane.getChildren().addAll(list, button);
+//
+//        Button b = new Button("Test");
+//        anchorPane.getChildren().add(b);
+//
+//
+//        root.getChildren().addAll(anchorPane);
 
-        AnchorPane anchorPane = new AnchorPane();
-        ListView list = new ListView();
-        AnchorPane.setTopAnchor(list, 10.0);
-        AnchorPane.setLeftAnchor(list, 10.0);
-        AnchorPane.setRightAnchor(list, 65.0);
 
-        Button button = new Button("Add");
-        AnchorPane.setTopAnchor(button, 10.0);
-        AnchorPane.setRightAnchor(button, 10.0);
-        anchorPane.getChildren().addAll(list, button);
-
-        Button b = new Button("Test");
-        anchorPane.getChildren().add(b);
-
-
-        root.getChildren().addAll(anchorPane);
         handleKeyboard(scene, world);
         handleMouse(scene, world);
-
         primaryStage.setTitle("Molecule Sample Application");
         primaryStage.setScene(scene);
         primaryStage.show();
-
         scene.setCamera(camera);
+
     }
 
 
@@ -275,8 +275,6 @@ public class MainApplication extends Application {
         world.getChildren().add(t2);
         world.getChildren().add(cc);
         System.out.println(p2.angle(p1));
-
-
     }
 
     public void setCordinateIBeam(Xform world, double x1, double y1, double z1, double x2, double y2, double z2) {
@@ -300,8 +298,6 @@ public class MainApplication extends Application {
         world.getChildren().add(t2);
         //world.getChildren().add(cc);
         System.out.println(p2.angle(p1));
-
-
     }
 
     private void buildTest() {
@@ -310,8 +306,34 @@ public class MainApplication extends Application {
         redMaterial.setDiffuseColor(Color.DARKRED);
         redMaterial.setSpecularColor(Color.RED);
 
-        setCordinateIBeam(world, 0, 0, 0, 20, 30, 30);
-//        setCordinateIBeam(world, 30, 30, 30, 30, 0, 30);
+        setCordinateIBeam(world, 0, 0, 0, 30, 0, 0);
+        setCordinateIBeam(world, 0, 0, 0, 0, 30, 0);
+        setCordinateIBeam(world, 0, 0, 0, 0, 0, 30);
+
+        setCordinateIBeam(world, 30, 0, 30, 0, 0, 30);
+        setCordinateIBeam(world, 30, 0, 30, 0, 0, 30);
+        setCordinateIBeam(world, 30, 0, 30, 0, 0, 30);
+
+        setCordinateIBeam(world, 30, 0, 30, 0, 30, 30);
+        setCordinateIBeam(world, 30, 0, 30, 0, 30, 30);
+        setCordinateIBeam(world, 30, 0, 30, 0, 30, 30);
+
+        setCordinateIBeam(world, 30, 0, 30, 0, 30, 0);
+        setCordinateIBeam(world, 30, 0, 30, 0, 30, 0);
+        setCordinateIBeam(world, 30, 0, 30, 0, 30, 0);
+
+
+        setCordinateIBeam(world, 30, 30, 0, 30, 0, 0);
+        setCordinateIBeam(world, 30, 30, 0, 0, 30, 0);
+        setCordinateIBeam(world, 30, 30, 0, 30, 30, 30);
+
+        setCordinateIBeam(world, 0, 0, 0, 30, 0, 0);
+        setCordinateIBeam(world, 0, 0, 0, 0, 30, 0);
+        setCordinateIBeam(world, 0, 0, 0, 0, 0, 30);
+        setCordinateIBeam(world, 30, 30, 30, 0, 30, 30);
+
+
+
 //        setCordinateIBeam(world, 30, 0, 30, 0, 0, 30);
 //        setCordinateIBeam(world, 30, 0, 0, 30, 30, 0);
 //        setCordinateIBeam(world, 30, 15, 40, 12, 55, 43);
@@ -368,13 +390,14 @@ public class MainApplication extends Application {
         iBeam.getChildren().add(line2);
         iBeam.getChildren().add(line3);
 
-        System.out.println(-Math.toDegrees(angle));
-
-        Rotate opositerotateAroundCenter = new Rotate(-45, Rotate.Y_AXIS);
+//        System.out.println(-Math.toDegrees(angle));
 
         iBeam.getTransforms().addAll(moveToMidpoint, rotateAroundCenter);
-        iBeam.getTransforms().add(opositerotateAroundCenter);
         world.getChildren().add(iBeam);
+
+//        Rotate opositerotateAroundCenter = new Rotate(Math.toDegrees(angle), Rotate.Y_AXIS);
+//        iBeam.getTransforms().add(opositerotateAroundCenter);
+//        iBeam.getRotationAxis().angle(origin , target);
 
     }
 
