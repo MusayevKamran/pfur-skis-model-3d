@@ -32,7 +32,7 @@ public class MainApplication extends Application {
     private static final double MOUSE_SPEED = 0.1;
     private static final double ROTATION_SPEED = 2.0;
     private static final double TRACK_SPEED = 0.3;
-    final Group root = new Group();
+    final Group rootGroup = new Group();
     final Xform testGroup = new Xform();
     final Xform axisGroup = new Xform();
     final Xform moleculeGroup = new Xform();
@@ -61,11 +61,11 @@ public class MainApplication extends Application {
     }
 
     //   private void buildScene() {
-    //       root.getChildren().add(world);
+    //       rootGroup.getChildren().add(world);
     //   }
     private void buildCamera() {
         System.out.println("buildCamera()");
-        root.getChildren().add(cameraXform);
+        rootGroup.getChildren().add(cameraXform);
         cameraXform.getChildren().add(cameraXform2);
         cameraXform2.getChildren().add(cameraXform3);
         cameraXform3.getChildren().add(camera);
@@ -199,12 +199,9 @@ public class MainApplication extends Application {
                         camera.setTranslateY(camera.getTranslateY() + 5);
                         break;
                 }
-
-
             }
         });
     }
-
 
 
     @Override
@@ -213,8 +210,8 @@ public class MainApplication extends Application {
         // setUserAgentStylesheet(STYLESHEET_MODENA);
         System.out.println("start()");
 
-        root.getChildren().add(world);
-        root.setDepthTest(DepthTest.ENABLE);
+        rootGroup.getChildren().add(world);
+        rootGroup.setDepthTest(DepthTest.ENABLE);
 
 
         // buildScene();
@@ -223,26 +220,8 @@ public class MainApplication extends Application {
         buildTest();
 
 
-        Scene scene = new Scene(root, 1024, 768, true);
+        Scene scene = new Scene(rootGroup, 1024, 768, true);
         scene.setFill(Color.GREY);
-//
-//        AnchorPane anchorPane = new AnchorPane();
-//        ListView list = new ListView();
-//        AnchorPane.setTopAnchor(list, 10.0);
-//        AnchorPane.setLeftAnchor(list, 10.0);
-//        AnchorPane.setRightAnchor(list, 65.0);
-//
-//        Button button = new Button("Add");
-//        AnchorPane.setTopAnchor(button, 10.0);
-//        AnchorPane.setRightAnchor(button, 10.0);
-//        anchorPane.getChildren().addAll(list, button);
-//
-//        Button b = new Button("Test");
-//        anchorPane.getChildren().add(b);
-//
-//
-//        root.getChildren().addAll(anchorPane);
-
 
         handleKeyboard(scene, world);
         handleMouse(scene, world);
@@ -252,7 +231,6 @@ public class MainApplication extends Application {
         scene.setCamera(camera);
 
     }
-
 
     public void createBar(Xform world, double x1, double y1, double z1, double x2, double y2, double z2) {
 
@@ -296,7 +274,6 @@ public class MainApplication extends Application {
         createConnectionIbeams(world, p1, p2);
         world.getChildren().add(t1);
         world.getChildren().add(t2);
-        //world.getChildren().add(cc);
         System.out.println(p2.angle(p1));
     }
 
@@ -331,8 +308,6 @@ public class MainApplication extends Application {
         setCordinateIBeam(world, 0, 0, 0, 0, 30, 0);
         setCordinateIBeam(world, 0, 0, 0, 0, 0, 30);
         setCordinateIBeam(world, 30, 30, 30, 0, 30, 30);
-
-
 
 //        setCordinateIBeam(world, 30, 0, 30, 0, 0, 30);
 //        setCordinateIBeam(world, 30, 0, 0, 30, 30, 0);
