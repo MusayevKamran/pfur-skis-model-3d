@@ -18,7 +18,6 @@ import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 
 
-
 public class MainApplication extends Application {
 
     private static final double CAMERA_INITIAL_DISTANCE = -450;
@@ -200,12 +199,9 @@ public class MainApplication extends Application {
                         camera.setTranslateY(camera.getTranslateY() + 5);
                         break;
                 }
-
-
             }
         });
     }
-
 
 
     @Override
@@ -278,7 +274,6 @@ public class MainApplication extends Application {
         createConnectionIbeams(world, p1, p2);
         world.getChildren().add(t1);
         world.getChildren().add(t2);
-        //world.getChildren().add(cc);
         System.out.println(p2.angle(p1));
     }
 
