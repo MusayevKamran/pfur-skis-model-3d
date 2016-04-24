@@ -233,26 +233,26 @@ public class MainApplication extends Application {
     }
 
     public void createBar(Xform world, double x1, double y1, double z1, double x2, double y2, double z2) {
-
-        Box t1 = new Box(1, 1, 1);
-        t1.setTranslateX(x1);
-        t1.setTranslateY(y1);
-        t1.setTranslateZ(z1);
-        testGroup.getChildren().add(t1);
-
-        Box t2 = new Box(1, 1, 1);
-        t2.setTranslateX(x2);
-        t2.setTranslateY(y2);
-        t2.setTranslateZ(z2);
-        testGroup.getChildren().add(t2);
-
-        Point3D p1 = new Point3D(x1, y1, z1);
-        Point3D p2 = new Point3D(x2, y2, z2);
-        Box cc = (Box) createConnection(p1, p2);
-        world.getChildren().add(t1);
-        world.getChildren().add(t2);
-        world.getChildren().add(cc);
-        System.out.println(p2.angle(p1));
+//
+//        Box t1 = new Box(1, 1, 1);
+//        t1.setTranslateX(x1);
+//        t1.setTranslateY(y1);
+//        t1.setTranslateZ(z1);
+//        testGroup.getChildren().add(t1);
+//
+//        Box t2 = new Box(1, 1, 1);
+//        t2.setTranslateX(x2);
+//        t2.setTranslateY(y2);
+//        t2.setTranslateZ(z2);
+//        testGroup.getChildren().add(t2);
+//
+//        Point3D p1 = new Point3D(x1, y1, z1);
+//        Point3D p2 = new Point3D(x2, y2, z2);
+//        Box cc = (Box) createConnection(p1, p2);
+//        world.getChildren().add(t1);
+//        world.getChildren().add(t2);
+//        world.getChildren().add(cc);
+//        System.out.println(p2.angle(p1));
     }
 
     public void setCordinateIBeam(Xform world, double x1, double y1, double z1, double x2, double y2, double z2) {
