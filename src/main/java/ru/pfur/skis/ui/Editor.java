@@ -8,7 +8,7 @@ public class Editor extends JFrame {
     private Editor() {
         initComponents();
     }
-
+//
     private void initComponents() {
 
         jPanelContent = new JPanel();
