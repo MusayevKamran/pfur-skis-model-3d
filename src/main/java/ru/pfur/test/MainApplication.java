@@ -325,11 +325,11 @@ public class MainApplication extends Application {
         setCordinateIBeam(world, 0, 0, 0, 0, 0, 30);
         setCordinateIBeam(world, 30, 30, 30, 0, 30, 30);
 
-        setCordinateIBeam(world, 30, 0, 30, 0, 0, 30);
-        setCordinateIBeam(world, 30, 0, 0, 30, 30, 0);
-        setCordinateIBeam(world, 30, 15, 40, 12, 55, 43);
-        setCordinateIBeam(world, 0, 35, 29, 40, 33, 15);
-        setCordinateIBeam(world, 50, 5, 29, 62, 45, 33);
+//        setCordinateIBeam(world, 30, 0, 30, 0, 0, 30);
+//        setCordinateIBeam(world, 30, 0, 0, 30, 30, 0);
+//        setCordinateIBeam(world, 30, 15, 40, 12, 55, 43);
+//        setCordinateIBeam(world, 0, 35, 29, 40, 33, 15);
+//        setCordinateIBeam(world, 50, 5, 29, 62, 45, 33);
 
 //        setCordinate(world, 0, 0, 0, 30, 30, 30);
 //        setCordinate(world, 30, 30, 30, 30, 0, 30);

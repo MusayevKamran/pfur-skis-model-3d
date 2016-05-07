@@ -42,16 +42,16 @@ public class Panel3D extends JPanel {
     private static final double MOUSE_SPEED = 0.1;
     private static final double ROTATION_SPEED = 2.0;
     private static final double TRACK_SPEED = 0.3;
-     Group rootGroup = new Group();
-     Xform modelGroup = new Xform();
+    Group rootGroup = new Group();
+    Xform modelGroup = new Xform();
     private JFXPanel jfp = new JFXPanel();
-     Xform axisGroup = new Xform();
-     Xform moleculeGroup = new Xform();
-     Xform world = new Xform();
-     PerspectiveCamera camera = new PerspectiveCamera(true);
-     Xform cameraXform = new Xform();
-     Xform cameraXform2 = new Xform();
-     Xform cameraXform3 = new Xform();
+    Xform axisGroup = new Xform();
+    Xform moleculeGroup = new Xform();
+    Xform world = new Xform();
+    PerspectiveCamera camera = new PerspectiveCamera(true);
+    Xform cameraXform = new Xform();
+    Xform cameraXform2 = new Xform();
+    Xform cameraXform3 = new Xform();
     double mousePosX;
     double mousePosY;
     double mouseOldX;
@@ -243,7 +243,7 @@ public class Panel3D extends JPanel {
 
     }
     private void buildModel(){
-       ArrayList<ru.pfur.skis.model.Node> nodes = (ArrayList<ru.pfur.skis.model.Node>) model.getNodes();
+        ArrayList<ru.pfur.skis.model.Node> nodes = (ArrayList<ru.pfur.skis.model.Node>) model.getNodes();
         nodes.forEach(this::createNode);
         ArrayList<ru.pfur.skis.model.Bar> bars = (ArrayList<ru.pfur.skis.model.Bar>) model.getBars();
         bars.forEach(this::createBar);

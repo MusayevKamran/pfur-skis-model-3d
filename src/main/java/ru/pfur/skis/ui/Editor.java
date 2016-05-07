@@ -22,14 +22,12 @@ public class Editor extends JFrame implements ActionListener {
     private JPanel jPanelToolbar;
     private JScrollPane jScrollPane1;
     private JPopupMenu.Separator jSeparator1;
-    private JToolBar.Separator jSeparator2;
     private JSplitPane jSplitPane1;
     private JSplitPane jSplitPane3;
     private JTabbedPane jTabbedBottom;
     private JTabbedPane jTabbedContent;
     private JTabbedPane jTabbedProject;
     private JToolBar jToolBar1;
-    private JTree jTree1;
     public static Editor instance = null;
     private Model model = null;
 
@@ -50,14 +48,13 @@ public class Editor extends JFrame implements ActionListener {
         jPanelToolbar = new JPanel();
         jTabbedContent = new JTabbedPane();
         jToolBar1 = new JToolBar();
-        jSeparator2 = new JToolBar.Separator();
         jSplitPane1 = new JSplitPane();
         jTabbedBottom = new JTabbedPane();
         jPanel1 = new JPanel();
         jSplitPane3 = new JSplitPane();
         jTabbedProject = new JTabbedPane();
         jScrollPane1 = new JScrollPane();
-        jTree1 = new JTree();
+//        jTree1 = new JTree();
         jMenuBar2 = new JMenuBar();
         jMenu1 = new JMenu();
         jSeparator1 = new JPopupMenu.Separator();
@@ -72,14 +69,6 @@ public class Editor extends JFrame implements ActionListener {
         setPreferredSize(new Dimension(1280, 720));
 
         jPanelContent.setLayout(new BorderLayout(4, 4));
-        jPanelToolbar.setMaximumSize(new Dimension(32767, 30));
-        jPanelToolbar.setMinimumSize(new Dimension(0, 30));
-        jPanelToolbar.setPreferredSize(new Dimension(966, 30));
-
-        jTabbedContent.setMaximumSize(new Dimension(32767, 30));
-        jTabbedContent.setMinimumSize(new Dimension(105, 30));
-        jTabbedContent.setPreferredSize(new Dimension(5, 30));
-
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
         jToolBar1.setMaximumSize(new Dimension(13, 30));
@@ -124,31 +113,30 @@ public class Editor extends JFrame implements ActionListener {
         jSplitPane1.setBottomComponent(jTabbedBottom);
 
         jSplitPane3.setDividerLocation(300);
+        JPanel panel = new JPanel();
+        JButton node = new JButton("Node");
+        node.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CreateNode node = new CreateNode("Node");
+                node.setVisible(true);
+            }
+        });
+        JButton bar = new JButton("Bar");
+        bar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CreateBar bar = new CreateBar("Bar");
+                bar.setVisible(true);
+            }
+        });
+        JButton beam = new JButton("Beam");
+        JButton truss = new JButton("Truss");
 
-        DefaultMutableTreeNode treeProject = new DefaultMutableTreeNode("Projects");
-
-        DefaultMutableTreeNode treeCreate = new DefaultMutableTreeNode("Create");
-        DefaultMutableTreeNode treeDelete = new DefaultMutableTreeNode("Delete");
-
-        DefaultMutableTreeNode createNode = new DefaultMutableTreeNode("Node");
-        DefaultMutableTreeNode createBar = new DefaultMutableTreeNode("Bar");
-        DefaultMutableTreeNode addSupport = new DefaultMutableTreeNode("Support");
-
-        treeDelete.add(createNode);
-        treeDelete.add(createBar);
-        treeProject.add(addSupport);
-
-        DefaultMutableTreeNode deleteNode = new DefaultMutableTreeNode("Node");
-        DefaultMutableTreeNode deleteBar = new DefaultMutableTreeNode("Bar");
-        DefaultMutableTreeNode deleteSupport = new DefaultMutableTreeNode("Support");
-        treeDelete.add(deleteNode);
-        treeDelete.add(deleteBar);
-        treeDelete.add(deleteSupport);
-        treeProject.add(treeDelete);
-
-
-        jTree1.setModel(new DefaultTreeModel(treeProject));
-//        JButton button = new JButton("Button");
+        panel.add(node);
+        panel.add(bar);
+        panel.add(beam);
+        panel.add(truss);
 //        button.addActionListener(new ActionListener() {
 //            @Override
 //            public void actionPerformed(ActionEvent e) {
@@ -158,7 +146,7 @@ public class Editor extends JFrame implements ActionListener {
 //                fxPanel.reload();
 //            }
 //        });
-        jScrollPane1.setViewportView(jTree1);
+        jScrollPane1.setViewportView(panel);
 
         jTabbedProject.addTab("Projects", jScrollPane1);
         jSplitPane3.setTopComponent(jTabbedProject);
