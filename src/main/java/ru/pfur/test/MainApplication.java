@@ -9,6 +9,7 @@ import javafx.scene.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.PickResult;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -106,6 +107,15 @@ public class MainApplication extends Application {
     }
 
     private void handleMouse(Scene scene, final Node root) {
+
+        scene.setOnScroll(new EventHandler<ScrollEvent>() {
+            @Override public void handle(ScrollEvent se) {
+                root.setScaleX(root.getScaleX() + se.getDeltaY()*0.001);
+                root.setScaleY(root.getScaleY() + se.getDeltaY()*0.001);
+                root.setScaleZ(root.getScaleZ() + se.getDeltaY()*0.001);
+            }
+        });
+
         scene.setOnMousePressed(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent me) {
                 mousePosX = me.getSceneX();
@@ -261,12 +271,18 @@ public class MainApplication extends Application {
         t1.setTranslateX(x1);
         t1.setTranslateY(y1);
         t1.setTranslateZ(z1);
+        final PhongMaterial redMaterial = new PhongMaterial();
+        redMaterial.setDiffuseColor(Color.DARKRED);
+        redMaterial.setSpecularColor(Color.RED);
+
+        t1.setMaterial(redMaterial);
         testGroup.getChildren().add(t1);
 
         Box t2 = new Box(1, 1, 1);
         t2.setTranslateX(x2);
         t2.setTranslateY(y2);
         t2.setTranslateZ(z2);
+        t2.setMaterial(redMaterial);
         testGroup.getChildren().add(t2);
 
         Point3D p1 = new Point3D(x1, y1, z1);

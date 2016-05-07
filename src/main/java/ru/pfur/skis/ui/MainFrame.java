@@ -19,7 +19,7 @@ public class MainFrame extends JFrame {
         JFrame f = new JFrame("JavaFX/Swing 3D app");
 
         f.getContentPane().setLayout(new BorderLayout());
-        Panel3D fxPanel = new Panel3D();
+        Panel3D fxPanel = new Panel3D(null);
         f.getContentPane().add(fxPanel, BorderLayout.CENTER);
         f.setExtendedState(f.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         f.setVisible(true);

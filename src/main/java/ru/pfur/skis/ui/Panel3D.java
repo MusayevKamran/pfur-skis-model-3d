@@ -2,21 +2,28 @@ package ru.pfur.skis.ui;
 
 import javafx.embed.swing.JFXPanel;
 import javafx.event.EventHandler;
+import javafx.geometry.Point3D;
 import javafx.scene.*;
+import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.PickResult;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Shape3D;
+import javafx.scene.shape.*;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
+import ru.pfur.skis.model.*;
 import ru.pfur.test.Xform;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Created by Kamran on 4/24/2016.
@@ -35,30 +42,51 @@ public class Panel3D extends JPanel {
     private static final double MOUSE_SPEED = 0.1;
     private static final double ROTATION_SPEED = 2.0;
     private static final double TRACK_SPEED = 0.3;
-    final Group rootGroup = new Group();
-    final Xform testGroup = new Xform();
+     Group rootGroup = new Group();
+     Xform modelGroup = new Xform();
     private JFXPanel jfp = new JFXPanel();
-
-    final Xform axisGroup = new Xform();
-    final Xform moleculeGroup = new Xform();
-    final Xform world = new Xform();
-    final PerspectiveCamera camera = new PerspectiveCamera(true);
-    final Xform cameraXform = new Xform();
-    final Xform cameraXform2 = new Xform();
-    final Xform cameraXform3 = new Xform();
+     Xform axisGroup = new Xform();
+     Xform moleculeGroup = new Xform();
+     Xform world = new Xform();
+     PerspectiveCamera camera = new PerspectiveCamera(true);
+     Xform cameraXform = new Xform();
+     Xform cameraXform2 = new Xform();
+     Xform cameraXform3 = new Xform();
     double mousePosX;
     double mousePosY;
     double mouseOldX;
     double mouseOldY;
     double mouseDeltaX;
     double mouseDeltaY;
+    Scene scene = null;
 
-    private StackPane root = new StackPane();
+    private Model model;
 
-    public Panel3D() {
+//    private StackPane root = new StackPane();
+
+    public Panel3D(Model model) {
         initGUI();
+        this.model = model;
+        buildModel();
+        scene = new Scene(rootGroup, 1024, 768, true, SceneAntialiasing.BALANCED);
+        jfp.setScene(scene);
+        add(jfp, BorderLayout.CENTER);
+        handleKeyboard(scene, world);
+        handleMouse(scene, world);
+        scene.setCamera(camera);
     }
     private void handleMouse(Scene scene, final Node root) {
+
+        scene.setOnScroll(new EventHandler<ScrollEvent>() {
+            @Override
+            public void handle(ScrollEvent se) {
+                root.setScaleX(root.getScaleX() + se.getDeltaY() * 0.001);
+                root.setScaleY(root.getScaleY() + se.getDeltaY() * 0.001);
+                root.setScaleZ(root.getScaleZ() + se.getDeltaY() * 0.001);
+            }
+        });
+
+
         scene.setOnMousePressed(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent me) {
                 mousePosX = me.getSceneX();
@@ -159,25 +187,18 @@ public class Panel3D extends JPanel {
     }
 
     public void initGUI() {
-        BackgroundFill bgf = new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, javafx.geometry.Insets.EMPTY);
-        Background bg = new Background(bgf);
-        root.setBackground(bg);
+//        BackgroundFill bgf = new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, javafx.geometry.Insets.EMPTY);
+//        Background bg = new Background(bgf);
+//        root.setBackground(bg);
 
-        rootGroup.getChildren().add(world);
-        rootGroup.setDepthTest(DepthTest.ENABLE);
+
 
         buildCamera();
         buildAxes();
-//        test();
+        createWorld();
 
-        Scene scene = new Scene(rootGroup, 1024, 768, true, SceneAntialiasing.BALANCED);
-        jfp.setScene(scene);
-        add(jfp, BorderLayout.CENTER);
-
-        handleKeyboard(scene, world);
-        handleMouse(scene, world);
-        scene.setCamera(camera);
-        root.getChildren().add(rootGroup);
+        rootGroup.getChildren().add(world);
+        rootGroup.setDepthTest(DepthTest.ENABLE);
     }
 
     private void buildCamera() {
@@ -209,9 +230,9 @@ public class Panel3D extends JPanel {
         blueMaterial.setDiffuseColor(Color.DARKBLUE);
         blueMaterial.setSpecularColor(Color.BLUE);
 
-        final javafx.scene.shape.Box xAxis = new javafx.scene.shape.Box(AXIS_LENGTH, 0.5, 0.5);
-        final javafx.scene.shape.Box yAxis = new javafx.scene.shape.Box(0.5, AXIS_LENGTH, 0.5);
-        final javafx.scene.shape.Box zAxis = new javafx.scene.shape.Box(0.5, 0.5, AXIS_LENGTH);
+        final javafx.scene.shape.Box xAxis = new javafx.scene.shape.Box(AXIS_LENGTH, 0.1, 0.1);
+        final javafx.scene.shape.Box yAxis = new javafx.scene.shape.Box(0.1, AXIS_LENGTH, 0.1);
+        final javafx.scene.shape.Box zAxis = new javafx.scene.shape.Box(0.1, 0.1, AXIS_LENGTH);
 
         xAxis.setMaterial(redMaterial);
         yAxis.setMaterial(greenMaterial);
@@ -219,6 +240,128 @@ public class Panel3D extends JPanel {
 
         axisGroup.getChildren().addAll(xAxis, yAxis, zAxis);
         axisGroup.setVisible(true);
+
+    }
+    private void buildModel(){
+       ArrayList<ru.pfur.skis.model.Node> nodes = (ArrayList<ru.pfur.skis.model.Node>) model.getNodes();
+        nodes.forEach(this::createNode);
+        ArrayList<ru.pfur.skis.model.Bar> bars = (ArrayList<ru.pfur.skis.model.Bar>) model.getBars();
+        bars.forEach(this::createBar);
+
+    }
+
+    private void createBar(Bar bar) {
+        ru.pfur.skis.model.Node n1 = bar.nodeStart;
+        ru.pfur.skis.model.Node n2 = bar.nodeEnd;
+
+        Point3D p1 = new Point3D(n1.x, n1.y, n1.z);
+        Point3D p2 = new Point3D(n2.x, n2.y, n2.z);
+
+        modelGroup.getChildren().add(createConnection(p1,p2));
+    }
+
+    private void createNode(ru.pfur.skis.model.Node node) {
+        final PhongMaterial redMaterial = new PhongMaterial();
+        redMaterial.setDiffuseColor(Color.DARKRED);
+        redMaterial.setSpecularColor(Color.RED);
+        javafx.scene.shape.Box t1 = new javafx.scene.shape.Box(1, 1, 1);
+        t1.setTranslateX(node.getX());
+        t1.setTranslateY(node.getY());
+        t1.setTranslateZ(node.getZ());
+        t1.setMaterial(redMaterial);
+        modelGroup.getChildren().add(t1);
+    }
+
+    public Shape3D createConnection(Point3D origin, Point3D target) {
+        Point3D yAxis = new Point3D(0, 1, 0);
+        Point3D diff = target.subtract(origin);
+        double height = diff.magnitude();
+
+        Point3D mid = target.midpoint(origin);
+        Translate moveToMidpoint = new Translate(mid.getX(), mid.getY(), mid.getZ());
+
+        Point3D axisOfRotation = diff.crossProduct(yAxis);
+        double angle = Math.acos(diff.normalize().dotProduct(yAxis));
+        Rotate rotateAroundCenter = new Rotate(-Math.toDegrees(angle), axisOfRotation);
+
+        Shape3D line = new javafx.scene.shape.Box(.5, height, .5);
+
+        line.getTransforms().addAll(moveToMidpoint, rotateAroundCenter);
+
+        return line;
+    }
+
+
+    public void setCordinateIBeam(Xform world, double x1, double y1, double z1, double x2, double y2, double z2) {
+
+        final PhongMaterial redMaterial = new PhongMaterial();
+        redMaterial.setDiffuseColor(Color.DARKRED);
+        redMaterial.setSpecularColor(Color.RED);
+
+        javafx.scene.shape.Box t1 = new javafx.scene.shape.Box(1, 1, 1);
+        t1.setTranslateX(x1);
+        t1.setTranslateY(y1);
+        t1.setTranslateZ(z1);
+        t1.setMaterial(redMaterial);
+        modelGroup.getChildren().add(t1);
+
+        javafx.scene.shape.Box t2 = new javafx.scene.shape.Box(1, 1, 1);
+        t2.setTranslateX(x2);
+        t2.setTranslateY(y2);
+        t2.setTranslateZ(z2);
+        t2.setMaterial(redMaterial);
+        modelGroup.getChildren().add(t2);
+
+        Point3D p1 = new Point3D(x1, y1, z1);
+        Point3D p2 = new Point3D(x2, y2, z2);
+        createConnectionIbeams(world, p1, p2);
+        world.getChildren().add(t1);
+        world.getChildren().add(t2);
+        System.out.println(p2.angle(p1));
+    }
+
+    public void createConnectionIbeams(Xform world, Point3D origin, Point3D target) {
+        Point3D yAxis = new Point3D(0, 1, 0);
+        Point3D diff = target.subtract(origin);
+        double height = diff.magnitude();
+
+        Point3D mid = target.midpoint(origin);
+        Translate moveToMidpoint = new Translate(mid.getX(), mid.getY(), mid.getZ());
+
+        Point3D axisOfRotation = diff.crossProduct(yAxis);
+        double angle = Math.acos(diff.normalize().dotProduct(yAxis));
+        Rotate rotateAroundCenter = new Rotate(-Math.toDegrees(angle), axisOfRotation);
+
+        Shape3D line1 = new javafx.scene.shape.Box(0.5, height, 2);
+        line1.setTranslateX(1);
+        Shape3D line2 = new javafx.scene.shape.Box(2, height, 0.5);
+        Shape3D line3 = new javafx.scene.shape.Box(0.5, height, 2);
+        line3.setTranslateX(-1);
+
+        Xform iBeam = new Xform();
+        iBeam.getChildren().add(line1);
+        iBeam.getChildren().add(line2);
+        iBeam.getChildren().add(line3);
+
+//        System.out.println(-Math.toDegrees(angle));
+
+        iBeam.getTransforms().addAll(moveToMidpoint, rotateAroundCenter);
+        world.getChildren().add(iBeam);
+
+
+    }
+
+    public void reload() {
+        rootGroup = new Group();
+        scene.setRoot(rootGroup);
+//        rootGroup.getChildren().clear();
+        rootGroup.getChildren().add(createWorld());
+    }
+
+    private Node createWorld() {
+        world = new Xform();
         world.getChildren().addAll(axisGroup);
+        world.getChildren().addAll(modelGroup);
+        return world;
     }
 }

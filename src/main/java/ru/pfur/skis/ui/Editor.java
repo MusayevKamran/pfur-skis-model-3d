@@ -1,12 +1,19 @@
 package ru.pfur.skis.ui;
 
+import ru.pfur.skis.command.AddBarCommand;
+import ru.pfur.skis.command.AddNodeCommand;
+import ru.pfur.skis.model.Bar;
+import ru.pfur.skis.model.Model;
+import ru.pfur.skis.model.Node;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Editor extends JFrame {
-    private JButton jButton1;
+public class Editor extends JFrame implements ActionListener {
     private JMenu jMenu1;
     private JMenu jMenu2;
     private JMenuBar jMenuBar2;
@@ -24,13 +31,21 @@ public class Editor extends JFrame {
     private JToolBar jToolBar1;
     private JTree jTree1;
     public static Editor instance = null;
+    private Model model = null;
 
     private Editor() {
         initComponents();
     }
-//
+
+    public Editor(Model model) {
+        this.model = model;
+        initComponents();
+
+    }
+
+    //
     private void initComponents() {
-        jButton1 = new JButton();
+//
         jPanelContent = new JPanel();
         jPanelToolbar = new JPanel();
         jTabbedContent = new JTabbedPane();
@@ -47,7 +62,8 @@ public class Editor extends JFrame {
         jMenu1 = new JMenu();
         jSeparator1 = new JPopupMenu.Separator();
         jMenu2 = new JMenu();
-        Panel3D fxPanel = new Panel3D();
+
+        Panel3D fxPanel = new Panel3D(model);
 
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -69,6 +85,7 @@ public class Editor extends JFrame {
         jToolBar1.setMaximumSize(new Dimension(13, 30));
         jToolBar1.setMinimumSize(new Dimension(13, 30));
         jToolBar1.setPreferredSize(new Dimension(13, 30));
+
 
         GroupLayout jPanelToolbarLayout = new GroupLayout(jPanelToolbar);
         jPanelToolbar.setLayout(jPanelToolbarLayout);
@@ -116,11 +133,10 @@ public class Editor extends JFrame {
         DefaultMutableTreeNode createNode = new DefaultMutableTreeNode("Node");
         DefaultMutableTreeNode createBar = new DefaultMutableTreeNode("Bar");
         DefaultMutableTreeNode addSupport = new DefaultMutableTreeNode("Support");
-        treeCreate.add(createNode);
-        treeCreate.add(createBar);
-        treeCreate.add(addSupport);
-        treeProject.add(treeCreate);
 
+        treeDelete.add(createNode);
+        treeDelete.add(createBar);
+        treeProject.add(addSupport);
 
         DefaultMutableTreeNode deleteNode = new DefaultMutableTreeNode("Node");
         DefaultMutableTreeNode deleteBar = new DefaultMutableTreeNode("Bar");
@@ -132,6 +148,16 @@ public class Editor extends JFrame {
 
 
         jTree1.setModel(new DefaultTreeModel(treeProject));
+//        JButton button = new JButton("Button");
+//        button.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                System.out.println(model.getNodes().size());
+//                new AddNodeCommand(model, new Node(-60,-60, -60));
+//                System.out.println(model.getNodes().size());
+//                fxPanel.reload();
+//            }
+//        });
         jScrollPane1.setViewportView(jTree1);
 
         jTabbedProject.addTab("Projects", jScrollPane1);
@@ -150,15 +176,35 @@ public class Editor extends JFrame {
         jMenuBar2.add(jMenu2);
 
         setJMenuBar(jMenuBar2);
-
         pack();
     }
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            instance = new Editor();
+            Model model = new Model();
+            createTestModel(model);
+            instance = new Editor(model);
             instance.setLocationRelativeTo(null);
             instance.setVisible(true);
         });
     }
 
+    private static void createTestModel(Model model) {
+        Node n1 = new Node(10,10,10);
+        Node n2 = new Node(30,30,30);
+        Node n3 = new Node(60,60,60);
+        Node n4 = new Node(30,60,60);
+        Node n5 = new Node(60,30,60);
+        new AddNodeCommand(model, n1);
+        new AddNodeCommand(model, n2);
+        new AddNodeCommand(model, n3);
+        new AddNodeCommand(model, n4);
+        new AddNodeCommand(model, n5);
+
+        new AddBarCommand(model, new Bar(n1,n2));
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
 }
