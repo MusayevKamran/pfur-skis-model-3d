@@ -1,25 +1,37 @@
 package ru.pfur.skis.ui;
 
+import ru.pfur.skis.command.AddNodeCommand;
+import ru.pfur.skis.model.Model;
+import ru.pfur.skis.model.Node;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Created by Kamran on 5/7/2016.
  */
 public class CreateNode extends JFrame {
-    private JButton ADD;
-    private JButton APPLY;
-    private JButton CLOSE;
+    private JButton buttonAdd;
+    private JButton buttonApply;
+    private JButton buttonClose;
     private JLabel labelX;
     private JLabel labelY;
     private JLabel labelZ;
+    private Model model;
 
     private JTextField getX = new JTextField();
     private JTextField getY = new JTextField();
     private JTextField getZ = new JTextField();
 
-    public CreateNode(String s) throws HeadlessException {
-        super(s);
+    public CreateNode(String name, Model model) throws HeadlessException {
+        super(name);
+        this.model = model;
+        init();
+    }
+
+    public void init() {
         setTitle("Node");
         setVisible(true);
         setAlwaysOnTop(true);
@@ -40,19 +52,30 @@ public class CreateNode extends JFrame {
         this.add(labelZ);
         getZ.setPreferredSize(new Dimension(100, 30));
         this.add(getZ);
+        this.setResizable(false);
 
-        ADD = new JButton("  ADD  ");
-        APPLY = new JButton("APPLY");
-        CLOSE = new JButton("CLOSE");
+        buttonAdd = new JButton("Add");
+        buttonAdd.setPreferredSize(new Dimension(70, 30));
+        buttonAdd.addActionListener(e -> {
+            int x = Integer.parseInt(getX.getText());
+            int y = Integer.parseInt(getY.getText());
+            int z = Integer.parseInt(getZ.getText());
 
-        this.add(ADD);
-        this.add(APPLY);
-        this.add(CLOSE);
+            new AddNodeCommand(model, new Node(x,y,z));
 
+        });
+        buttonApply = new JButton("Apply");
+        buttonApply.setPreferredSize(new Dimension(70, 30));
+        buttonClose = new JButton("Close");
+        buttonClose.setPreferredSize(new Dimension(70, 30));
+
+        this.add(buttonAdd);
+        this.add(buttonApply);
+        this.add(buttonClose);
     }
 
     public static void main(String[] args) {
-        CreateNode frame = new CreateNode("Node");
+        CreateNode frame = new CreateNode("Node", new Model());
         frame.setVisible(true);
     }
 }

@@ -1,5 +1,6 @@
 package ru.pfur.skis.ui;
 
+import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.event.EventHandler;
 import javafx.geometry.Point3D;
@@ -19,16 +20,22 @@ import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import ru.pfur.skis.model.*;
+import ru.pfur.skis.observer.AddElementSubscriber;
+import ru.pfur.skis.ui.primitiv.NodeBox;
 import ru.pfur.test.Xform;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import javafx.scene.control.Button;
 
 /**
  * Created by Kamran on 4/24/2016.
  */
-public class Panel3D extends JPanel {
+public class Panel3D extends JPanel implements AddElementSubscriber {
+
+    private int tttt  =0;
+
 
     private static final double CAMERA_INITIAL_DISTANCE = -450;
     private static final double CAMERA_INITIAL_X_ANGLE = 70.0;
@@ -43,6 +50,7 @@ public class Panel3D extends JPanel {
     private static final double ROTATION_SPEED = 2.0;
     private static final double TRACK_SPEED = 0.3;
     Group rootGroup = new Group();
+    //    Xform modelGroup = new Xform();
     Xform modelGroup = new Xform();
     private JFXPanel jfp = new JFXPanel();
     Xform axisGroup = new Xform();
@@ -74,7 +82,9 @@ public class Panel3D extends JPanel {
         handleKeyboard(scene, world);
         handleMouse(scene, world);
         scene.setCamera(camera);
+        model.subscribeAddElement(this);
     }
+
     private void handleMouse(Scene scene, final Node root) {
 
         scene.setOnScroll(new EventHandler<ScrollEvent>() {
@@ -139,7 +149,12 @@ public class Panel3D extends JPanel {
         final PhongMaterial greyMaterial = new PhongMaterial();
         greyMaterial.setDiffuseColor(Color.BLUE);
         greyMaterial.setSpecularColor(Color.RED);
-        ((Shape3D) n).setMaterial(greyMaterial);
+        if (n instanceof NodeBox) {
+            NodeBox t = (NodeBox) n;
+            t.setMaterial(greyMaterial);
+            t.getNode().setSelected(true);
+        }
+
 
     }
 
@@ -187,11 +202,6 @@ public class Panel3D extends JPanel {
     }
 
     public void initGUI() {
-//        BackgroundFill bgf = new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, javafx.geometry.Insets.EMPTY);
-//        Background bg = new Background(bgf);
-//        root.setBackground(bg);
-
-
 
         buildCamera();
         buildAxes();
@@ -202,7 +212,6 @@ public class Panel3D extends JPanel {
     }
 
     private void buildCamera() {
-        System.out.println("buildCamera()");
         rootGroup.getChildren().add(cameraXform);
         cameraXform.getChildren().add(cameraXform2);
         cameraXform2.getChildren().add(cameraXform3);
@@ -217,7 +226,7 @@ public class Panel3D extends JPanel {
     }
 
     private void buildAxes() {
-        System.out.println("buildAxes()");
+//        System.out.println("buildAxes()");
         final PhongMaterial redMaterial = new PhongMaterial();
         redMaterial.setDiffuseColor(Color.DARKRED);
         redMaterial.setSpecularColor(Color.RED);
@@ -242,7 +251,8 @@ public class Panel3D extends JPanel {
         axisGroup.setVisible(true);
 
     }
-    private void buildModel(){
+
+    private void buildModel() {
         ArrayList<ru.pfur.skis.model.Node> nodes = (ArrayList<ru.pfur.skis.model.Node>) model.getNodes();
         nodes.forEach(this::createNode);
         ArrayList<ru.pfur.skis.model.Bar> bars = (ArrayList<ru.pfur.skis.model.Bar>) model.getBars();
@@ -257,19 +267,21 @@ public class Panel3D extends JPanel {
         Point3D p1 = new Point3D(n1.x, n1.y, n1.z);
         Point3D p2 = new Point3D(n2.x, n2.y, n2.z);
 
-        modelGroup.getChildren().add(createConnection(p1,p2));
+        modelGroup.getChildren().add(createConnection(p1, p2));
     }
 
     private void createNode(ru.pfur.skis.model.Node node) {
         final PhongMaterial redMaterial = new PhongMaterial();
         redMaterial.setDiffuseColor(Color.DARKRED);
         redMaterial.setSpecularColor(Color.RED);
-        javafx.scene.shape.Box t1 = new javafx.scene.shape.Box(1, 1, 1);
+        NodeBox t1 = new NodeBox(1, 1, 1, node);
         t1.setTranslateX(node.getX());
         t1.setTranslateY(node.getY());
         t1.setTranslateZ(node.getZ());
         t1.setMaterial(redMaterial);
         modelGroup.getChildren().add(t1);
+        jfp.repaint();
+
     }
 
     public Shape3D createConnection(Point3D origin, Point3D target) {
@@ -354,8 +366,8 @@ public class Panel3D extends JPanel {
     public void reload() {
         rootGroup = new Group();
         scene.setRoot(rootGroup);
-//        rootGroup.getChildren().clear();
         rootGroup.getChildren().add(createWorld());
+
     }
 
     private Node createWorld() {
@@ -363,5 +375,51 @@ public class Panel3D extends JPanel {
         world.getChildren().addAll(axisGroup);
         world.getChildren().addAll(modelGroup);
         return world;
+    }
+
+    @Override
+    public void addNode(Model model, ru.pfur.skis.model.Node node) {
+
+        if (tttt % 2 == 0) {
+
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("NEW");
+                    final PhongMaterial redMaterial = new PhongMaterial();
+                    redMaterial.setDiffuseColor(Color.DARKRED);
+                    redMaterial.setSpecularColor(Color.BLUE);
+                    Sphere oxygenSphere = new Sphere(15.0);
+                    oxygenSphere.setMaterial(redMaterial);
+                    oxygenSphere.setTranslateX(150);
+                    Xform n = new Xform();
+                    n.getChildren().add(oxygenSphere);
+                    modelGroup.getChildren().addAll(oxygenSphere);
+                    System.out.println("NEW");
+                }
+            });
+
+            tttt++;
+        }
+        else
+        {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+
+                    Sphere oxygenSphere = (Sphere) modelGroup.getChildren().get(0);
+                    oxygenSphere.translateXProperty().setValue(-150);
+                    System.out.println("NEW");
+                }
+            });
+
+            tttt++;
+        }
+
+    }
+
+    @Override
+    public void addBar(Model model, Bar bar) {
+
     }
 }

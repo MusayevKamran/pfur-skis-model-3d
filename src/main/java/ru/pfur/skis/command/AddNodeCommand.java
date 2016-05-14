@@ -21,6 +21,7 @@ public class AddNodeCommand extends AbstractCommand implements Command {
             model.addNode(node);
             return true;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return false;
         }
     }

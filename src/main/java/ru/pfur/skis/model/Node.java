@@ -67,7 +67,10 @@ public class Node {
         return selected;
     }
 
-    public void setSelected(boolean selected) {
+    public void setSelected(boolean selected)
+    {
+
+        System.out.println("SELECTED");
         this.selected = selected;
     }
 
