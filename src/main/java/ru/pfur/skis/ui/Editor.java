@@ -113,14 +113,14 @@ public class Editor extends JFrame implements ActionListener {
             }
         });
 
-        JButton bar = new JButton("Bar");
-        bar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CreateBar bar = new CreateBar("Bar");
-                bar.setVisible(true);
-            }
-        });
+//        JButton bar = new JButton("Bar");
+//        bar.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                CreateBar bar = new CreateBar("Bar");
+//                bar.setVisible(true);
+//            }
+//        });
 
         JButton beam = new JButton("Beam");
         beam.addActionListener(new ActionListener() {
