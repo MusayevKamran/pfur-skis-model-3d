@@ -3,19 +3,28 @@ package ru.pfur.skis.model;
 /**
  * Created by Kamran on 3/19/2016.
  */
-public class Node {
+public class Node implements Selecteble {
     public int x;
     public int y;
     public int z;
     public boolean selected;
     public Load load = null;
     public Support support = null;
+    public Model model;
 
 
     public Node(int x, int y, int z) {
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+
+    public Model getModel() {
+        return model;
+    }
+
+    public void setModel(Model model) {
+        this.model = model;
     }
 
     @Override
@@ -67,10 +76,7 @@ public class Node {
         return selected;
     }
 
-    public void setSelected(boolean selected)
-    {
-
-        System.out.println("SELECTED");
+    public void setSelected(boolean selected) {
         this.selected = selected;
     }
 
@@ -91,4 +97,9 @@ public class Node {
     }
 
 
+    @Override
+    public void selected() {
+        this.selected = !this.selected;
+        model.nodeSelectedChanged(this);
+    }
 }

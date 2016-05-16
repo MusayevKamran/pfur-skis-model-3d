@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Editor extends JFrame implements ActionListener {
+    private static Editor instance = null;
     private JMenu jMenu1;
     private JMenu jMenu2;
     private JMenuBar jMenuBar2;
@@ -25,7 +26,6 @@ public class Editor extends JFrame implements ActionListener {
     private JTabbedPane jTabbedContent;
     private JTabbedPane jTabbedProject;
     private JToolBar jToolBar;
-    private static Editor instance = null;
     private Model model = null;
     private Panel3D fxPanel = null;
     private GroupLayout jPanelToolbarLayout;
@@ -38,6 +38,61 @@ public class Editor extends JFrame implements ActionListener {
         this.model = model;
         initComponents();
 
+    }
+
+    public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(() -> {
+            Model model = new Model();
+            createTestModel(model);
+//            smallTest(model);
+            instance = new Editor(model);
+            instance.setLocationRelativeTo(null);
+            instance.setVisible(true);
+        });
+    }
+
+    private static void smallTest(Model model) {
+        Node n1 = new Node(10, 10, 10);
+        Node n2 = new Node(30, 30, 30);
+        Node n3 = new Node(60, 60, 60);
+        Node n4 = new Node(30, 60, 60);
+        Node n5 = new Node(60, 30, 60);
+
+        new AddNodeCommand(model, n1);
+        new AddNodeCommand(model, n2);
+        new AddNodeCommand(model, n3);
+        new AddNodeCommand(model, n4);
+        new AddNodeCommand(model, n5);
+
+        new AddBarCommand(model, new Bar(n1, n2));
+    }
+
+    private static void createTestModel(Model model) {
+        double t = 0;
+        double s = 0;
+        Node prev = null;
+        int num = 0;
+        double f = (Math.PI / 2 - (-Math.PI / 2)) / 200;
+
+        for (t = (-Math.PI / 2); t < (Math.PI / 2); t = t + f) {
+
+            for (s = 0; s < (Math.PI / 2); s = s + 0.05) {
+                num++;
+                int x = (int) ((1 + Math.cos(2 * (90 * t))) * Math.cos(2 * (360 * s)) * 100);
+                int y = (int) ((1 + Math.cos(2 * (90 * t))) * Math.sin(2 * (360 * s)) * 100);
+                int z = (int) (Math.sin(2 * (90 * t)) * Math.sin(360 * s) * 100);
+                Node n = new Node(x, y, z);
+                new AddNodeCommand(model, n);
+
+                if (prev != null && prev != n) {
+                    new AddBarCommand(model, new Bar(prev, n));
+                    num++;
+                }
+                prev = n;
+            }
+
+        }
+        System.out.println(num);
     }
 
     private void initComponents() {
@@ -105,40 +160,23 @@ public class Editor extends JFrame implements ActionListener {
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
         JButton node = new JButton("Node");
-        node.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CreateNode node = new CreateNode("Node", model);
-                node.setVisible(true);
-            }
+        node.addActionListener(e -> {
+            CreateNode node1 = new CreateNode("Node", model);
+            node1.setVisible(true);
         });
 
         JButton bar = new JButton("Bar");
-        bar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CreateBar bar = new CreateBar("Bar");
-                bar.setVisible(true);
-            }
+        bar.addActionListener(e -> {
+            CreateBar bar1 = new CreateBar("Bar");
+            bar1.setVisible(true);
         });
 
         JButton beam = new JButton("Beam");
-        beam.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                jPanelContent.add(jPanelToolbar, BorderLayout.PAGE_START);
-
-            }
-        });
+        beam.addActionListener(e -> jPanelContent.add(jPanelToolbar, BorderLayout.PAGE_START));
 
 
         JButton truss = new JButton("Truss");
-        truss.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                jPanelContent.remove(jPanelToolbar);
-            }
-        });
+        truss.addActionListener(e -> jPanelContent.remove(jPanelToolbar));
 
         panel.add(node);
         panel.add(bar);
@@ -150,7 +188,6 @@ public class Editor extends JFrame implements ActionListener {
         jPanelContent.add(bottomPane, BorderLayout.CENTER);
         getContentPane().add(jPanelContent, BorderLayout.CENTER);
 
-        //        bottomPane.setDividerLocation(400);
         jTabbedBottom.addTab("Console", jPanel1);
         bottomPane.setResizeWeight(1.0);
         bottomPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
@@ -158,86 +195,6 @@ public class Editor extends JFrame implements ActionListener {
 
         pack();
     }
-
-    public void UpdateModelBad() {
-        fxPanel = new Panel3D(model);
-        fxPanel.setPreferredSize(new Dimension(1000, 1000));
-
-        centerPane.getComponentCount();
-        centerPane.remove(2);
-        centerPane.setRightComponent(fxPanel);
-        centerPane.repaint(0, 0, 0, 1000, 1000);
-    }
-
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(() -> {
-            Model model = new Model();
-//            createTestModel(model);
-            smallTest(model);
-            instance = new Editor(model);
-            instance.setLocationRelativeTo(null);
-            instance.setVisible(true);
-        });
-    }
-
-    private static void smallTest(Model model) {
-        Node n1 = new Node(10, 10, 10);
-        Node n2 = new Node(30, 30, 30);
-        Node n3 = new Node(60, 60, 60);
-        Node n4 = new Node(30, 60, 60);
-        Node n5 = new Node(60, 30, 60);
-
-        new AddNodeCommand(model, n1);
-        new AddNodeCommand(model, n2);
-        new AddNodeCommand(model, n3);
-        new AddNodeCommand(model, n4);
-        new AddNodeCommand(model, n5);
-
-        new AddBarCommand(model, new Bar(n1, n2));
-    }
-
-    private static void createTestModel(Model model) {
-        double t = 0;
-        double s = 0;
-        Node prev = null;
-        int num = 0;
-        double f = (Math.PI / 2 - (-Math.PI / 2)) / 200;
-
-        for (t = (-Math.PI / 2); t < (Math.PI / 2); t = t + f) {
-
-            for (s = 0; s < (Math.PI / 2); s = s + 0.05) {
-                num++;
-                int x = (int) ((1 + Math.cos(2 * (90 * t))) * Math.cos(2 * (360 * s)) * 100);
-                int y = (int) ((1 + Math.cos(2 * (90 * t))) * Math.sin(2 * (360 * s)) * 100);
-                int z = (int) (Math.sin(2 * (90 * t)) * Math.sin(360 * s) * 100);
-                Node n = new Node(x, y, z);
-                new AddNodeCommand(model, n);
-
-                if (prev != null && prev != n) {
-                    new AddBarCommand(model, new Bar(prev, n));
-                    num++;
-                }
-                prev = n;
-            }
-
-        }
-//        Node n1 = new Node(10, 10, 10);
-//        Node n2 = new Node(30, 30, 30);
-//        Node n3 = new Node(60, 60, 60);
-//        Node n4 = new Node(30, 60, 60);
-//        Node n5 = new Node(60, 30, 60);
-//
-//        new AddNodeCommand(model, n1);
-//        new AddNodeCommand(model, n2);
-//        new AddNodeCommand(model, n3);
-//        new AddNodeCommand(model, n4);
-//        new AddNodeCommand(model, n5);
-//
-//        new AddBarCommand(model, new Bar(n1, n2));
-
-        System.out.println(num);
-    }
-
 
     @Override
     public void actionPerformed(ActionEvent e) {
