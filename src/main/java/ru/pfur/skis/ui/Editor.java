@@ -67,8 +67,8 @@ public class Editor extends JFrame implements ActionListener {
         jMenuBar2.add(jMenu1);
         jMenu2.setText("Edit");
         jMenuBar2.add(jMenu2);
-
         setJMenuBar(jMenuBar2);
+
 
         jPanelContent.setLayout(new BorderLayout(4, 4));
         jToolBar.setFloatable(false);
@@ -113,14 +113,14 @@ public class Editor extends JFrame implements ActionListener {
             }
         });
 
-//        JButton bar = new JButton("Bar");
-//        bar.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                CreateBar bar = new CreateBar("Bar");
-//                bar.setVisible(true);
-//            }
-//        });
+        JButton bar = new JButton("Bar");
+        bar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CreateBar bar = new CreateBar("Bar");
+                bar.setVisible(true);
+            }
+        });
 
         JButton beam = new JButton("Beam");
         beam.addActionListener(new ActionListener() {
@@ -173,7 +173,8 @@ public class Editor extends JFrame implements ActionListener {
         java.awt.EventQueue.invokeLater(() -> {
             Model model = new Model();
 //            createTestModel(model);
-            smallTest(model);
+            semiCon(model);
+//            smallTest(model);
             instance = new Editor(model);
             instance.setLocationRelativeTo(null);
             instance.setVisible(true);
@@ -207,9 +208,9 @@ public class Editor extends JFrame implements ActionListener {
 
             for (s = 0; s < (Math.PI / 2); s = s + 0.05) {
                 num++;
-                int x = (int) ((1 + Math.cos(2 * (90 * t))) * Math.cos(2 * (360 * s)) * 100);
-                int y = (int) ((1 + Math.cos(2 * (90 * t))) * Math.sin(2 * (360 * s)) * 100);
-                int z = (int) (Math.sin(2 * (90 * t)) * Math.sin(360 * s) * 100);
+                int x = (int) ((1 + Math.cos(2 * (Math.PI / 2 * t))) * Math.cos(2 * (2 * Math.PI * s)) * 100);
+                int y = (int) ((1 + Math.cos(2 * (Math.PI / 2 * t))) * Math.sin(2 * (2 * Math.PI * s)) * 100);
+                int z = (int) (Math.sin(2 * (Math.PI / 2 * t)) * Math.sin(2 * Math.PI * s) * 100);
                 Node n = new Node(x, y, z);
                 new AddNodeCommand(model, n);
 
@@ -221,23 +222,40 @@ public class Editor extends JFrame implements ActionListener {
             }
 
         }
-//        Node n1 = new Node(10, 10, 10);
-//        Node n2 = new Node(30, 30, 30);
-//        Node n3 = new Node(60, 60, 60);
-//        Node n4 = new Node(30, 60, 60);
-//        Node n5 = new Node(60, 30, 60);
-//
-//        new AddNodeCommand(model, n1);
-//        new AddNodeCommand(model, n2);
-//        new AddNodeCommand(model, n3);
-//        new AddNodeCommand(model, n4);
-//        new AddNodeCommand(model, n5);
-//
-//        new AddBarCommand(model, new Bar(n1, n2));
+
 
         System.out.println(num);
     }
 
+    //88
+    public static void semiCon(Model model) {
+        double t = 0;
+        double s = 0;
+        Node prev = null;
+        int num = 0;
+
+        double f = (Math.PI / 2 - (-Math.PI / 2)) / 500;
+
+        for (t = 0; t < 1; t = t + f) {
+
+            for (s = 0; s < 2 * Math.PI; s = s + 0.1) {
+                num++;
+                int x = (int) ((4 * (1 - t)) * 50);
+                int y = (int) (((4 - 2 * t) * Math.cos(Math.PI * s)) * 50);
+                int z = (int) ((Math.sin(Math.PI * s)) * 50);
+                Node n = new Node(x, y, z);
+                new AddNodeCommand(model, n);
+
+                if (prev != null && prev != n) {
+                    new AddBarCommand(model, new Bar(prev, n));
+                    num++;
+                }
+                prev = n;
+            }
+
+        }
+        System.out.println(num);
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
