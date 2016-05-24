@@ -8,9 +8,14 @@ import java.awt.*;
  */
 public class CreateBar extends JFrame{
 
-    private JButton ADD;
-    private JButton APPLY;
-    private JButton CLOSE;
+    JPanel panelForX;
+    JPanel panelForY;
+    JPanel panelForZ;
+    JPanel panelForButtons;
+
+    private JButton buttonAdd;
+    private JButton buttonApply;
+    private JButton buttonClose;
 
     private JLabel labelX1;
     private JLabel labelX2;
@@ -19,65 +24,85 @@ public class CreateBar extends JFrame{
     private JLabel labelZ1;
     private JLabel labelZ2;
 
-    private JTextField getX1 = new JTextField();
-    private JTextField getX2 = new JTextField();
-    private JTextField getY1 = new JTextField();
-    private JTextField getY2 = new JTextField();
-    private JTextField getZ1 = new JTextField();
-    private JTextField getZ2 = new JTextField();
+    private JTextField textFieldGetX1;
+    private JTextField textFieldGetX2;
+    private JTextField textFieldGetY1;
+    private JTextField textFieldGetY2;
+    private JTextField textFieldGetZ1;
+    private JTextField textFieldGetZ2;
 
     public CreateBar(String s) throws HeadlessException {
         super(s);
         setTitle("Bar");
         setVisible(true);
         setAlwaysOnTop(true);
-        setSize(new Dimension(300, 310));
+        setLocation(5, 115);
+        setSize(new Dimension(500, 230));
         setLayout(new FlowLayout());
 
-        labelX1 = new JLabel("X 1");
-        labelX1.setPreferredSize(new Dimension(100, 30));
-        this.add(labelX1);
-        getX1.setPreferredSize(new Dimension(100, 30));
-        this.add(getX1);
+        panelForX = new JPanel();
+        labelX1 = new JLabel("X1  =");
+        labelX1.setPreferredSize(new Dimension(30, 30));
+        panelForX.add(labelX1);
+        textFieldGetX1 = new JTextField("15");
+        textFieldGetX1.setPreferredSize(new Dimension(170, 30));
+        panelForX.add(textFieldGetX1);
 
-        labelX2 = new JLabel("X 1");
-        labelX2.setPreferredSize(new Dimension(100, 30));
-        this.add(labelX2);
-        getX2.setPreferredSize(new Dimension(100, 30));
-        this.add(getX2);
-
-        labelY1 = new JLabel("Y 1");
-        labelY1.setPreferredSize(new Dimension(100, 30));
-        this.add(labelY1);
-        getY1.setPreferredSize(new Dimension(100, 30));
-        this.add(getY1);
-
-        labelY2 = new JLabel("Y 2");
-        labelY2.setPreferredSize(new Dimension(100, 30));
-        this.add(labelY2);
-        getY2.setPreferredSize(new Dimension(100, 30));
-        this.add(getY2);
-
-        labelZ1 = new JLabel("Z 1");
-        labelZ1.setPreferredSize(new Dimension(100, 30));
-        this.add(labelZ1);
-        getZ1.setPreferredSize(new Dimension(100, 30));
-        this.add(getZ1);
-
-        labelZ2 = new JLabel("Z 2");
-        labelZ2.setPreferredSize(new Dimension(100, 30));
-        this.add(labelZ2);
-        getZ2.setPreferredSize(new Dimension(100, 30));
-        this.add(getZ2);
+        labelX2 = new JLabel("X2  =");
+        labelX2.setPreferredSize(new Dimension(30, 30));
+        panelForX.add(labelX2);
+        textFieldGetX2 = new JTextField("15");
+        textFieldGetX2.setPreferredSize(new Dimension(170, 30));
+        panelForX.add(textFieldGetX2);
 
 
-        ADD = new JButton("  ADD  ");
-        APPLY = new JButton("APPLY");
-        CLOSE = new JButton("CLOSE");
+        panelForY = new JPanel();
+        labelY1 = new JLabel("Y1  = ");
+        labelY1.setPreferredSize(new Dimension(30, 30));
+        panelForY.add(labelY1);
+        textFieldGetY1 = new JTextField("15");
+        textFieldGetY1.setPreferredSize(new Dimension(170, 30));
+        panelForY.add(textFieldGetY1);
 
-        this.add(ADD);
-        this.add(APPLY);
-        this.add(CLOSE);
+        labelY2 = new JLabel("Y2  = ");
+        labelY2.setPreferredSize(new Dimension(30, 30));
+        panelForY.add(labelY2);
+        textFieldGetY2 = new JTextField("15");
+        textFieldGetY2.setPreferredSize(new Dimension(170, 30));
+        panelForY.add(textFieldGetY2);
+
+
+        panelForZ = new JPanel();
+        labelZ1 = new JLabel("Z1  =");
+        labelZ1.setPreferredSize(new Dimension(30, 30));
+        panelForZ.add(labelZ1);
+        textFieldGetZ1 = new JTextField("20");
+        textFieldGetZ1.setPreferredSize(new Dimension(170, 30));
+        panelForZ.add(textFieldGetZ1);
+
+        labelZ2 = new JLabel("Z2  =");
+        labelZ2.setPreferredSize(new Dimension(30, 30));
+        panelForZ.add(labelZ2);
+        textFieldGetZ2 = new JTextField("20");
+        textFieldGetZ2.setPreferredSize(new Dimension(170, 30));
+        panelForZ.add(textFieldGetZ2);
+
+        panelForButtons = new JPanel();
+        buttonAdd = new JButton("ADD");
+        buttonAdd.setPreferredSize(new Dimension(80, 30));
+        buttonApply = new JButton("APPLY");
+        buttonApply.setPreferredSize(new Dimension(80, 30));
+        buttonClose = new JButton("CLOSE");
+        buttonClose.setPreferredSize(new Dimension(80, 30));
+
+        panelForButtons.add(buttonAdd);
+        panelForButtons.add(buttonApply);
+        panelForButtons.add(buttonClose);
+
+        this.add(panelForX);
+        this.add(panelForY);
+        this.add(panelForZ);
+        this.add(panelForButtons);
 
     }
 
