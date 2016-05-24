@@ -43,61 +43,6 @@ public class Editor extends JFrame implements ActionListener {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
             Model model = new Model();
-            createTestModel(model);
-//            smallTest(model);
-            instance = new Editor(model);
-            instance.setLocationRelativeTo(null);
-            instance.setVisible(true);
-        });
-    }
-
-    private static void smallTest(Model model) {
-        Node n1 = new Node(10, 10, 10);
-        Node n2 = new Node(30, 30, 30);
-        Node n3 = new Node(60, 60, 60);
-        Node n4 = new Node(30, 60, 60);
-        Node n5 = new Node(60, 30, 60);
-
-        new AddNodeCommand(model, n1);
-        new AddNodeCommand(model, n2);
-        new AddNodeCommand(model, n3);
-        new AddNodeCommand(model, n4);
-        new AddNodeCommand(model, n5);
-
-        new AddBarCommand(model, new Bar(n1, n2));
-    }
-
-    private static void createTestModel(Model model) {
-        double t = 0;
-        double s = 0;
-        Node prev = null;
-        int num = 0;
-        double f = (Math.PI / 2 - (-Math.PI / 2)) / 200;
-
-        for (t = (-Math.PI / 2); t < (Math.PI / 2); t = t + f) {
-
-            for (s = 0; s < (Math.PI / 2); s = s + 0.05) {
-                num++;
-                int x = (int) ((1 + Math.cos(2 * (90 * t))) * Math.cos(2 * (360 * s)) * 100);
-                int y = (int) ((1 + Math.cos(2 * (90 * t))) * Math.sin(2 * (360 * s)) * 100);
-                int z = (int) (Math.sin(2 * (90 * t)) * Math.sin(360 * s) * 100);
-                Node n = new Node(x, y, z);
-                new AddNodeCommand(model, n);
-
-                if (prev != null && prev != n) {
-                    new AddBarCommand(model, new Bar(prev, n));
-                    num++;
-                }
-                prev = n;
-            }
-
-        }
-        System.out.println(num);
-    }
-
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(() -> {
-            Model model = new Model();
 //            createTestModel(model);
 //            ellipsoid(model);
 //            semiCon(model);
@@ -193,8 +138,6 @@ public class Editor extends JFrame implements ActionListener {
             }
 
         }
-
-
         System.out.println(num);
     }
 
