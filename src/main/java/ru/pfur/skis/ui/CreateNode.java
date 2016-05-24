@@ -6,24 +6,29 @@ import ru.pfur.skis.model.Node;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Created by Kamran on 5/7/2016.
  */
 public class CreateNode extends JFrame {
-    private JButton buttonAdd;
-    private JButton buttonApply;
-    private JButton buttonClose;
+
+    JPanel panelForX;
+    JPanel panelForY;
+    JPanel panelForZ;
+    JPanel panelForButtons;
+
     private JLabel labelX;
     private JLabel labelY;
     private JLabel labelZ;
     private Model model;
 
-    private JTextField getX = new JTextField();
-    private JTextField getY = new JTextField();
-    private JTextField getZ = new JTextField();
+    private JTextField textFieldGetX;
+    private JTextField textFieldGetY;
+    private JTextField textFieldGetZ;
+
+    private JButton buttonAdd;
+    private JButton buttonApply;
+    private JButton buttonClose;
 
     public CreateNode(String name, Model model) throws HeadlessException {
         super(name);
@@ -31,51 +36,69 @@ public class CreateNode extends JFrame {
         init();
     }
 
+    public static void main(String[] args) {
+        CreateNode frame = new CreateNode("Node", new Model());
+        frame.setVisible(true);
+    }
+
     public void init() {
         setTitle("Node");
         setVisible(true);
         setAlwaysOnTop(true);
-        setSize(new Dimension(300, 200));
+        setLocation(5, 115);
+        setSize(new Dimension(300, 230));
         setLayout(new FlowLayout());
-        labelX = new JLabel("X");
-        labelX.setPreferredSize(new Dimension(100, 30));
-        this.add(labelX);
-        getX.setPreferredSize(new Dimension(100, 30));
-        this.add(getX);
-        labelY = new JLabel("Y");
-        labelY.setPreferredSize(new Dimension(100, 30));
-        this.add(labelY);
-        getY.setPreferredSize(new Dimension(100, 30));
-        this.add(getY);
-        labelZ = new JLabel("Z");
-        labelZ.setPreferredSize(new Dimension(100, 30));
-        this.add(labelZ);
-        getZ.setPreferredSize(new Dimension(100, 30));
-        this.add(getZ);
-        this.setResizable(false);
+        setResizable(false);
 
+        panelForX = new JPanel();
+        labelX = new JLabel("X  =");
+        labelX.setPreferredSize(new Dimension(25, 30));
+        panelForX.add(labelX);
+        textFieldGetX = new JTextField("15");
+        textFieldGetX.setPreferredSize(new Dimension(170, 30));
+        panelForX.add(textFieldGetX);
+
+        panelForY = new JPanel();
+        labelY = new JLabel("Y  = ");
+        labelY.setPreferredSize(new Dimension(25, 30));
+        panelForY.add(labelY);
+        textFieldGetY = new JTextField("15");
+        textFieldGetY.setPreferredSize(new Dimension(170, 30));
+        panelForY.add(textFieldGetY);
+
+        panelForZ = new JPanel();
+        labelZ = new JLabel("Z  =");
+        labelZ.setPreferredSize(new Dimension(25, 30));
+        panelForZ.add(labelZ);
+        textFieldGetZ = new JTextField("15");
+        textFieldGetZ.setPreferredSize(new Dimension(170, 30));
+        panelForZ.add(textFieldGetZ);
+
+
+        panelForButtons = new JPanel();
         buttonAdd = new JButton("Add");
-        buttonAdd.setPreferredSize(new Dimension(70, 30));
+        buttonAdd.setPreferredSize(new Dimension(80, 30));
+
         buttonAdd.addActionListener(e -> {
-            int x = Integer.parseInt(getX.getText());
-            int y = Integer.parseInt(getY.getText());
-            int z = Integer.parseInt(getZ.getText());
+            int x = Integer.parseInt(textFieldGetX.getText());
+            int y = Integer.parseInt(textFieldGetY.getText());
+            int z = Integer.parseInt(textFieldGetZ.getText());
 
             new AddNodeCommand(model, new Node(x,y,z));
 
         });
         buttonApply = new JButton("Apply");
-        buttonApply.setPreferredSize(new Dimension(70, 30));
+        buttonApply.setPreferredSize(new Dimension(80, 30));
         buttonClose = new JButton("Close");
-        buttonClose.setPreferredSize(new Dimension(70, 30));
+        buttonClose.setPreferredSize(new Dimension(80, 30));
 
-        this.add(buttonAdd);
-        this.add(buttonApply);
-        this.add(buttonClose);
-    }
+        panelForButtons.add(buttonAdd);
+        panelForButtons.add(buttonApply);
+        panelForButtons.add(buttonClose);
 
-    public static void main(String[] args) {
-        CreateNode frame = new CreateNode("Node", new Model());
-        frame.setVisible(true);
+        this.add(panelForX);
+        this.add(panelForY);
+        this.add(panelForZ);
+        this.add(panelForButtons);
     }
 }

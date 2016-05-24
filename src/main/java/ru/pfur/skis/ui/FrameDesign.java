@@ -1,11 +1,16 @@
 package ru.pfur.skis.ui;
 
+import ru.pfur.skis.command.AddBarCommand;
+import ru.pfur.skis.command.AddNodeCommand;
+import ru.pfur.skis.model.Bar;
 import ru.pfur.skis.model.Model;
+import ru.pfur.skis.model.Node;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.*;
+import java.awt.image.BufferedImage;
 
 public class FrameDesign extends JFrame {
     JFrame frame;
@@ -63,10 +68,10 @@ public class FrameDesign extends JFrame {
 
 
         JButton pasteButton = new JButton();
-//        ImageIcon pasteIcon = new ImageIcon(getClass().getResource("icon/open.png"));
-//        pasteIcon = new ImageIcon(pasteIcon.getImage().getScaledInstance(20, 20, BufferedImage.SCALE_SMOOTH));
-//        pasteButton.setText(null);
-//        pasteButton.setIcon(pasteIcon);
+        ImageIcon pasteIcon = new ImageIcon(getClass().getResource("open.gif"));
+        pasteIcon = new ImageIcon(pasteIcon.getImage().getScaledInstance(20, 20, BufferedImage.SCALE_SMOOTH));
+        pasteButton.setText("");
+        pasteButton.setIcon(pasteIcon);
         pasteButton.setToolTipText("Paste");
         toolBar.add(pasteButton);
         getContentPane().add(toolBar, BorderLayout.NORTH);
@@ -116,9 +121,41 @@ public class FrameDesign extends JFrame {
         setVisible(true);
     }
 
+    private static void createTestModel(Model model) {
+        double t = 0;
+        double s = 0;
+        Node prev = null;
+        int num = 0;
+        double f = (Math.PI / 2 - (-Math.PI / 2)) / 200;
+
+
+        for (t = (-Math.PI / 2); t < (Math.PI / 2); t = t + f) {
+            for (s = 0; s < (Math.PI / 2); s = s + 0.05) {
+
+                num++;
+                int x = (int) ((1 + Math.cos(2 * (Math.PI / 2 * t))) * Math.cos(2 * (2 * Math.PI * s)) * 100);
+                int y = (int) ((1 + Math.cos(2 * (Math.PI / 2 * t))) * Math.sin(2 * (2 * Math.PI * s)) * 100);
+                int z = (int) (Math.sin(2 * (Math.PI / 2 * t)) * Math.sin(2 * Math.PI * s) * 100);
+                Node n = new Node(x, y, z);
+                new AddNodeCommand(model, n);
+
+                if (prev != null && prev != n) {
+                    new AddBarCommand(model, new Bar(prev, n));
+                    num++;
+                }
+                prev = n;
+            }
+
+        }
+
+
+        System.out.println(num);
+    }
+
     public static void main(String[] args) {
         Model model = new Model();
         new FrameDesign(model);
+
     }
 
 }

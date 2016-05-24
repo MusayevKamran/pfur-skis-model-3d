@@ -5,21 +5,18 @@ import javafx.embed.swing.JFXPanel;
 import javafx.event.EventHandler;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
-import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.PickResult;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Shape3D;
+import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
-import ru.pfur.skis.model.*;
+import ru.pfur.skis.model.Bar;
+import ru.pfur.skis.model.Model;
 import ru.pfur.skis.observer.AddElementSubscriber;
 import ru.pfur.skis.ui.primitiv.NodeBox;
 import ru.pfur.test.Xform;
@@ -27,15 +24,11 @@ import ru.pfur.test.Xform;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import javafx.scene.control.Button;
 
 /**
  * Created by Kamran on 4/24/2016.
  */
 public class Panel3D extends JPanel implements AddElementSubscriber {
-
-    private int tttt  =0;
-
 
     private static final double CAMERA_INITIAL_DISTANCE = -450;
     private static final double CAMERA_INITIAL_X_ANGLE = 70.0;
@@ -52,7 +45,6 @@ public class Panel3D extends JPanel implements AddElementSubscriber {
     Group rootGroup = new Group();
     //    Xform modelGroup = new Xform();
     Xform modelGroup = new Xform();
-    private JFXPanel jfp = new JFXPanel();
     Xform axisGroup = new Xform();
     Xform moleculeGroup = new Xform();
     Xform world = new Xform();
@@ -67,7 +59,8 @@ public class Panel3D extends JPanel implements AddElementSubscriber {
     double mouseDeltaX;
     double mouseDeltaY;
     Scene scene = null;
-
+    private int tttt = 0;
+    private JFXPanel jfp = new JFXPanel();
     private Model model;
 
 //    private StackPane root = new StackPane();
@@ -76,7 +69,7 @@ public class Panel3D extends JPanel implements AddElementSubscriber {
         initGUI();
         this.model = model;
         buildModel();
-        scene = new Scene(rootGroup, 1024, 768, true, SceneAntialiasing.BALANCED);
+        scene = new Scene(rootGroup, 1345, 610, true, SceneAntialiasing.BALANCED);
         jfp.setScene(scene);
         add(jfp, BorderLayout.CENTER);
         handleKeyboard(scene, world);
