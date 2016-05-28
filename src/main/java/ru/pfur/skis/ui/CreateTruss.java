@@ -1,14 +1,22 @@
 package ru.pfur.skis.ui;
 
+import ru.pfur.skis.Service;
 import ru.pfur.skis.model.Model;
+import ru.pfur.skis.model.scheme.TestScheme;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
 /**
  * Created by Kamran on 5/8/2016.
  */
 public class CreateTruss  extends JFrame{
+
+    public static final int WIDTH = 300;
+    public static final int HEIGHT = 250;
 
     JPanel panelForX;
     JPanel panelForY;
@@ -29,63 +37,40 @@ public class CreateTruss  extends JFrame{
     private JButton buttonClose;
 
 
-    public CreateTruss(String s) throws HeadlessException {
+    public CreateTruss(String s, Model model) throws HeadlessException {
         super(s);
         setTitle("Truss");
         setVisible(true);
         setAlwaysOnTop(true);
-        setLocation(5, 115);
-        setSize(new Dimension(300, 230));
-        setLayout(new FlowLayout());
+        Service.center(this, WIDTH, HEIGHT);
+        setSize(new Dimension(WIDTH, HEIGHT));
 
-        panelForX = new JPanel();
-        labelX = new JLabel("X  =");
-        labelX.setPreferredSize(new Dimension(25, 30));
-        panelForX.add(labelX);
-        textFieldGetX = new JTextField("15");
-        textFieldGetX.setPreferredSize(new Dimension(170, 30));
-        panelForX.add(textFieldGetX);
+        JPanel buttonPanel = new JPanel();
+        getContentPane().add(buttonPanel);
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        JButton button1 = new JButton("Test");
+        button1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new TestScheme(model);
+            }
+        });
 
-        panelForY = new JPanel();
-        labelY = new JLabel("Y  = ");
-        labelY.setPreferredSize(new Dimension(25, 30));
-        panelForY.add(labelY);
-        textFieldGetY = new JTextField("15");
-        textFieldGetY.setPreferredSize(new Dimension(170, 30));
-        panelForY.add(textFieldGetY);
+        ImageIcon icon = new ImageIcon(getClass().getResource("test.png"));
+        icon = new ImageIcon(icon.getImage().getScaledInstance(100, 94, BufferedImage.SCALE_SMOOTH));
+        button1.setIcon(icon);
 
-        panelForZ = new JPanel();
-        labelZ = new JLabel("Z  =");
-        labelZ.setPreferredSize(new Dimension(25, 30));
-        panelForZ.add(labelZ);
-        textFieldGetZ = new JTextField("15");
-        textFieldGetZ.setPreferredSize(new Dimension(170, 30));
-        panelForZ.add(textFieldGetZ);
+        button1.setPreferredSize(new Dimension(270, 100));
+        buttonPanel.add(button1);
 
-
-        panelForButtons = new JPanel();
-        buttonAdd = new JButton("Add");
-        buttonAdd.setPreferredSize(new Dimension(80, 30));
-
-        buttonApply = new JButton("Apply");
-        buttonApply.setPreferredSize(new Dimension(80, 30));
-
-        buttonClose = new JButton("Close");
-        buttonClose.setPreferredSize(new Dimension(80, 30));
-
-        panelForButtons.add(buttonAdd);
-        panelForButtons.add(buttonApply);
-        panelForButtons.add(buttonClose);
-
-        this.add(panelForX);
-        this.add(panelForY);
-        this.add(panelForZ);
-        this.add(panelForButtons);
+        JButton button2 = new JButton("Test2");
+        button2.setPreferredSize(new Dimension(270, 100));
+        buttonPanel.add(button2);
 
     }
 
     public static void main(String[] args) {
-        CreateNode frame = new CreateNode("Node", new Model());
+        CreateTruss frame = new CreateTruss("Truss", new Model());
         frame.setVisible(true);
     }
 }

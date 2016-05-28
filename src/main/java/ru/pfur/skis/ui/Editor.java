@@ -43,11 +43,16 @@ public class Editor extends JFrame implements ActionListener {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
             Model model = new Model();
-//            createTestModel(model);
+            createTestModel(model);
 //            ellipsoid(model);
 //            semiCon(model);
 //            smallTest(model);
-            createTruss(model);
+//            createTruss(model);
+
+            //problem
+//            corrugatedSphere(model);
+            crossShell(model);
+//            semiCycloid(model);
             instance = new Editor(model);
             instance.setLocationRelativeTo(null);
             instance.setVisible(true);
@@ -171,6 +176,62 @@ public class Editor extends JFrame implements ActionListener {
         System.out.println(num);
     }
 
+    public static void semiCycloid(Model model) {
+        double t;
+        double s;
+        Node prev = null;
+        int num = 0;
+
+        for (t = 0; t < Math.PI / 3; t = t + 0.05) {
+            for (s = 0; s < Math.PI; s = s + 0.05) {
+                num++;
+                int x = (int) ((2 * (3.1415 * t + Math.sin(Math.PI * t)) * Math.sin(2 * Math.PI * s)) * 20);
+                int y = (int) ((8 * (1 + Math.cos(Math.PI * t))) * 20);
+                int z = (int) ((2 * (3.1415 * t + Math.sin(Math.PI * t)) * Math.cos(2 * Math.PI * s)) * 20);
+                Node n = new Node(x, y, z);
+                new AddNodeCommand(model, n);
+
+                if (prev != null && prev != n) {
+                    new AddBarCommand(model, new Bar(prev, n));
+                    num++;
+                }
+                prev = n;
+            }
+        }
+
+
+        System.out.println(num);
+    }
+
+    public static void crossShell(Model model) {
+        double t;
+        double s;
+        Node prev = null;
+        int num = 0;
+
+        for (t = 0; t < Math.PI / 3; t = t + 0.1) {
+            for (s = 0; s < Math.PI; s = s + 0.1) {
+                num++;
+                int x = (int) ((3.1415 * t - 3.1415 * 0.5) * Math.sin(2 * Math.PI * s)) * 20;
+                int y = (int) ((3.1415 * t - 3.1415 * 0.5) * Math.cos(2 * Math.PI * s)) * 20;
+                int z = (int) (((2 * (Math.pow((3.1415 * t - 3.1415 * 0.5), 4) * (Math.sin(Math.pow((4 * Math.PI * s), 2))))) / 4) * 20);
+                Node n = new Node(x, y, z);
+                new AddNodeCommand(model, n);
+
+                if (prev != null && prev != n) {
+                    new AddBarCommand(model, new Bar(prev, n));
+                    num++;
+                }
+                prev = n;
+            }
+
+            prev = null;
+        }
+
+
+        System.out.println(num);
+    }
+
     //88
     public static void semiCon(Model model) {
         double t = 0;
@@ -201,6 +262,34 @@ public class Editor extends JFrame implements ActionListener {
         System.out.println(num);
     }
 
+    public static void corrugatedSphere(Model model) {
+        double t = 0;
+        double s = 0;
+        Node prev = null;
+        int num = 0;
+
+        for (t = 0; t < 2 * Math.PI; t = t + 0.05) {
+            for (s = 0; s < Math.PI; s = s + 0.05) {
+
+                num++;
+                int x = (int) (((5 + Math.cos(2 * Math.PI * t) + 2 * (1 - Math.sin(Math.PI * t)) * Math.cos(6 * 2 * Math.PI * s)) * Math.cos(2 * Math.PI * s)) * 20);
+                int y = (int) (((5 + Math.cos(2 * Math.PI * t) + 2 * (1 - Math.sin(Math.PI * t)) * Math.cos(6 * 2 * Math.PI * s)) * Math.sin(2 * Math.PI * s)) * 20);
+                int z = (int) ((5 * Math.sin(Math.PI * t)) * 20);
+
+                Node n = new Node(z, y, x);
+                new AddNodeCommand(model, n);
+                if (prev != null && prev != n) {
+                    new AddBarCommand(model, new Bar(prev, n));
+                    num++;
+                }
+                prev = n;
+            }
+
+
+        }
+        System.out.println(num);
+    }
+
     private void initComponents() {
         setTitle("3D Model Design");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -220,7 +309,9 @@ public class Editor extends JFrame implements ActionListener {
         jMenuBar2 = new JMenuBar();
         jMenu1 = new JMenu();
         jMenu2 = new JMenu();
-        fxPanel = new Panel3D(model);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        fxPanel = new Panel3D(model, screenSize);
         fxPanel.setPreferredSize(new Dimension(1000, 1000));
         jPanelToolbarLayout = new GroupLayout(jPanelToolbar);
 
@@ -273,7 +364,7 @@ public class Editor extends JFrame implements ActionListener {
 
         JButton bar = new JButton("Bar");
         bar.addActionListener(e -> {
-            CreateBar bar1 = new CreateBar("Bar");
+            CreateBar bar1 = new CreateBar("Bar", model);
             bar1.setVisible(true);
         });
 

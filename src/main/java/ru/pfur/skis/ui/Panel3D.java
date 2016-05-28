@@ -5,25 +5,19 @@ import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.PickResult;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
-import javafx.scene.shape.Shape3D;
-import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import ru.pfur.skis.model.Bar;
 import ru.pfur.skis.model.Model;
 import ru.pfur.skis.model.Selecteble;
-import ru.pfur.skis.model.Bar;
-import ru.pfur.skis.model.Model;
 import ru.pfur.skis.observer.AddElementSubscriber;
 import ru.pfur.skis.observer.ChangeElementSubscriber;
+import ru.pfur.skis.observer.RemoveElementSubscriber;
 import ru.pfur.skis.ui.primitiv.BarBox;
 import ru.pfur.skis.ui.primitiv.NodeBox;
 import ru.pfur.test.Xform;
@@ -35,7 +29,7 @@ import java.util.ArrayList;
 /**
  * Created by Kamran on 4/24/2016.
  */
-public class Panel3D extends JPanel implements AddElementSubscriber, ChangeElementSubscriber {
+public class Panel3D extends JPanel implements AddElementSubscriber, ChangeElementSubscriber, RemoveElementSubscriber {
 
     private static final double CAMERA_INITIAL_DISTANCE = -450;
     private static final double CAMERA_INITIAL_X_ANGLE = 70.0;
@@ -55,6 +49,8 @@ public class Panel3D extends JPanel implements AddElementSubscriber, ChangeEleme
     final PhongMaterial barSelectedColor = new PhongMaterial(Color.GREENYELLOW);
     final PhongMaterial barUnSelectedColor = new PhongMaterial(Color.LIGHTGRAY);
 
+    NodeProperties menu = null;
+
     Group rootGroup = new Group();
     Xform modelGroup = new Xform();
     Xform axisGroup = new Xform();
@@ -73,20 +69,46 @@ public class Panel3D extends JPanel implements AddElementSubscriber, ChangeEleme
     private JFXPanel jfp = new JFXPanel();
     private Model model;
 
-    public Panel3D(Model model) {
+    public Panel3D(Model model, Dimension size) {
         this.model = model;
+        menu = new NodeProperties(model);
         add(jfp, BorderLayout.CENTER);
         Platform.runLater(() -> {
             initGUI();
             buildModel();
-            scene = new Scene(rootGroup, 1024, 768, true, SceneAntialiasing.BALANCED);
+            scene = new Scene(rootGroup, size.getWidth() - 10, size.height - 10, true, SceneAntialiasing.BALANCED);
             handleKeyboard(scene, world);
             handleMouse(scene, world);
             scene.setCamera(camera);
             jfp.setScene(scene);
         });
+
         model.subscribeAddElement(this);
         model.subscribeChangeElement(this);
+        model.subscribeRemoveElement(this);
+    }
+
+    public void rotateAnimation() {
+        double modifier = 1.0;
+        Thread n = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 1000; i++) {
+                    cameraXform.ry.setAngle(cameraXform.ry.getAngle() - mouseDeltaX * MOUSE_SPEED * modifier * ROTATION_SPEED + 0.1);
+//                    cameraXform.rx.setAngle(cameraXform.rx.getAngle() + mouseDeltaY * MOUSE_SPEED * modifier * ROTATION_SPEED);
+
+                    try {
+                        Thread.currentThread().sleep(100);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+
+                }
+            }
+        });
+        n.start();
+
+
     }
 
     private void handleMouse(Scene scene, final Node root) {
@@ -105,9 +127,18 @@ public class Panel3D extends JPanel implements AddElementSubscriber, ChangeEleme
             PickResult p = me.getPickResult();
             if (p.getIntersectedNode() != null) {
                 Node n = p.getIntersectedNode();
-                changeColor(n);
+                if (me.isPrimaryButtonDown()) {
+                    changeColor(n);
+                }
+                if (me.isSecondaryButtonDown()) {
+                    changeColor(n);
+
+
+                    menu.show(null, (int) me.getScreenX(), (int) me.getScreenY());
+                }
             }
         });
+
         scene.setOnMouseDragged(me -> {
             mouseOldX = mousePosX;
             mouseOldY = mousePosY;
@@ -314,5 +345,20 @@ public class Panel3D extends JPanel implements AddElementSubscriber, ChangeEleme
         else material = barUnSelectedColor;
 
         Platform.runLater(() -> n.setMaterial(material));
+    }
+
+    @Override
+    public void removeNode(Model model, ru.pfur.skis.model.Node node) {
+        ObservableList<Node> children = modelGroup.getChildren();
+        NodeBox n = children.parallelStream().filter(p -> p instanceof NodeBox).map(p -> (NodeBox) p).filter(p -> p.getNode().equals(node)).findFirst().get();
+
+        Platform.runLater(() ->
+                modelGroup.getChildren().remove(n));
+
+    }
+
+    @Override
+    public void removeBar(Model model, Bar bar) {
+
     }
 }

@@ -74,7 +74,7 @@ public class Model {
     }
 
     public void subscribeRemoveElement(RemoveElementSubscriber subscriber) {
-        this.removeSubscribers.remove(subscriber);
+        this.removeSubscribers.add(subscriber);
     }
 
     public void notifyAddNode(Node node) {
