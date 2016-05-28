@@ -1,5 +1,6 @@
 package ru.pfur.skis.ui;
 
+import ru.pfur.skis.Service;
 import ru.pfur.skis.command.AddNodeCommand;
 import ru.pfur.skis.model.Model;
 import ru.pfur.skis.model.Node;
@@ -11,6 +12,10 @@ import java.awt.*;
  * Created by Kamran on 5/7/2016.
  */
 public class CreateNode extends JFrame {
+
+
+    public static final int WIDTH = 300;
+    public static final int HEIGHT = 230;
 
     JPanel panelForX;
     JPanel panelForY;
@@ -45,8 +50,8 @@ public class CreateNode extends JFrame {
         setTitle("Node");
         setVisible(true);
         setAlwaysOnTop(true);
-        setLocation(5, 115);
-        setSize(new Dimension(300, 230));
+        Service.center(this, WIDTH, HEIGHT);
+        setSize(new Dimension(WIDTH, HEIGHT));
         setLayout(new FlowLayout());
         setResizable(false);
 

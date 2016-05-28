@@ -1,5 +1,7 @@
 package ru.pfur.skis.model;
 
+import ru.pfur.skis.Service;
+
 /**
  * Created by Kamran on 3/19/2016.
  */
@@ -12,11 +14,16 @@ public class Node implements Selecteble {
     public Support support = null;
     public Model model;
 
+    public Integer index;
+    public String name;
 
     public Node(int x, int y, int z) {
         this.x = x;
         this.y = y;
         this.z = z;
+
+        index = Service.getNextIndex();
+        name = "node" + index;
     }
 
     public Model getModel() {
@@ -96,6 +103,17 @@ public class Node implements Selecteble {
         this.support = support;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
 
     @Override
     public void selected() {
