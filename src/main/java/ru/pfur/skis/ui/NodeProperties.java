@@ -16,8 +16,9 @@ import java.awt.event.FocusListener;
  * Created by Kamran on 5/28/2016.
  */
 public class NodeProperties extends JPopupMenu implements FocusListener, ChangeElementSubscriber {
-    private JMenuItem removeItem;
     private JMenuItem infoItem;
+    private JMenuItem properties;
+    private JMenuItem removeItem;
     private JMenuItem closeItem;
     private Model model;
     private Node node;
@@ -28,8 +29,19 @@ public class NodeProperties extends JPopupMenu implements FocusListener, ChangeE
         model.subscribeChangeElement(this);
         infoItem = new JMenuItem();
         infoItem.setEnabled(false);
+
+        properties = new JMenuItem("Properties");
         removeItem = new JMenuItem("Remove");
         closeItem = new JMenuItem("Close");
+
+        properties.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CreateNode t = new CreateNode("Node", node);
+                t.setVisible(true);
+                hideit();
+            }
+        });
         removeItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -45,10 +57,15 @@ public class NodeProperties extends JPopupMenu implements FocusListener, ChangeE
         });
         add(infoItem);
         addSeparator();
+        add(properties);
+        addSeparator();
         add(removeItem);
         addSeparator();
         add(closeItem);
+
+
     }
+
 
     @Override
     public void hide() {
@@ -59,6 +76,7 @@ public class NodeProperties extends JPopupMenu implements FocusListener, ChangeE
     private void hideit() {
         this.setVisible(false);
     }
+
 
     @Override
     public void focusGained(FocusEvent e) {
@@ -78,6 +96,16 @@ public class NodeProperties extends JPopupMenu implements FocusListener, ChangeE
 
     @Override
     public void barSelectedChanged(Model model, Bar bar) {
+
+    }
+
+    @Override
+    public void nodeTranslateChanged(Model model, Node node) {
+
+    }
+
+    @Override
+    public void barNodeChanged(Model model, Bar bar) {
 
     }
 }

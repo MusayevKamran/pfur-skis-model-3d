@@ -46,6 +46,22 @@ public class Bar implements Selecteble {
         this.stiffness = stiffness;
     }
 
+    public Node getNodeStart() {
+        return nodeStart;
+    }
+
+    public void setNodeStart(Node nodeStart) {
+        this.nodeStart = nodeStart;
+    }
+
+    public Node getNodeEnd() {
+        return nodeEnd;
+    }
+
+    public void setNodeEnd(Node nodeEnd) {
+        this.nodeEnd = nodeEnd;
+    }
+
     @Override
     public void selected() {
         this.selected = !this.selected;

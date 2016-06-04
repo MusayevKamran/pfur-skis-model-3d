@@ -13,4 +13,8 @@ public interface ChangeElementSubscriber {
 
     void barSelectedChanged(Model model, Bar bar);
 
+    void nodeTranslateChanged(Model model, Node node);
+
+    void barNodeChanged(Model model, Bar bar);
+
 }
