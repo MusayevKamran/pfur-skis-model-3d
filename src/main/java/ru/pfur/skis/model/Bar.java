@@ -12,10 +12,16 @@ public class Bar implements Selecteble {
     public double i;
     public Stiffness stiffness = null;
     public Model model;
+    public String name;
+
+    public Integer index;
+
 
     public Bar(Node nodeStart, Node nodeEnd) {
         this.nodeStart = nodeStart;
         this.nodeEnd = nodeEnd;
+        name = nodeStart.getName() + " : " + nodeEnd.getName();
+
     }
 
     public Model getModel() {
@@ -60,6 +66,10 @@ public class Bar implements Selecteble {
 
     public void setNodeEnd(Node nodeEnd) {
         this.nodeEnd = nodeEnd;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override

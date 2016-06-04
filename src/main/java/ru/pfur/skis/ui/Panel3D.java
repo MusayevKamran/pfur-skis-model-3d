@@ -20,6 +20,7 @@ import ru.pfur.skis.observer.ChangeElementSubscriber;
 import ru.pfur.skis.observer.RemoveElementSubscriber;
 import ru.pfur.skis.ui.primitiv.BarBox;
 import ru.pfur.skis.ui.primitiv.NodeBox;
+import ru.pfur.skis.ui.primitiv.TranslateBox;
 import ru.pfur.test.Xform;
 
 import javax.swing.*;
@@ -42,18 +43,19 @@ public class Panel3D extends JPanel implements AddElementSubscriber, ChangeEleme
     private static final double MOUSE_SPEED = 0.1;
     private static final double ROTATION_SPEED = 2.0;
     private static final double TRACK_SPEED = 0.3;
-
+    final PhongMaterial translatingColorX = new PhongMaterial(Color.RED);
+    final PhongMaterial translatingColorY = new PhongMaterial(Color.GREEN);
+    final PhongMaterial translatingColorZ = new PhongMaterial(Color.BLUE);
     final PhongMaterial nodeSelectedColor = new PhongMaterial(Color.BLUE);
     final PhongMaterial nodeUnSelectedColor = new PhongMaterial(Color.RED);
-
     final PhongMaterial barSelectedColor = new PhongMaterial(Color.GREENYELLOW);
     final PhongMaterial barUnSelectedColor = new PhongMaterial(Color.LIGHTGRAY);
-
-    NodeProperties menu = null;
-
+    NodeProperties popupMenuNode = null;
+    BarProperties popupMenuBar = null;
     Group rootGroup = new Group();
     Xform modelGroup = new Xform();
     Xform axisGroup = new Xform();
+    Xform translateGroup = new Xform();
     Xform world = new Xform();
     PerspectiveCamera camera = new PerspectiveCamera(true);
     Xform cameraXform = new Xform();
@@ -66,12 +68,15 @@ public class Panel3D extends JPanel implements AddElementSubscriber, ChangeEleme
     double mouseDeltaX;
     double mouseDeltaY;
     Scene scene = null;
+    private Node translating = null;
     private JFXPanel jfp = new JFXPanel();
     private Model model;
+    private ru.pfur.skis.model.Node node;
 
     public Panel3D(Model model, Dimension size) {
         this.model = model;
-        menu = new NodeProperties(model);
+        popupMenuBar = new BarProperties(model);
+        popupMenuNode = new NodeProperties(model);
         add(jfp, BorderLayout.CENTER);
         Platform.runLater(() -> {
             initGUI();
@@ -108,10 +113,11 @@ public class Panel3D extends JPanel implements AddElementSubscriber, ChangeEleme
         });
         n.start();
 
-
     }
 
+
     private void handleMouse(Scene scene, final Node root) {
+
         scene.setOnScroll(se -> {
             root.setScaleX(root.getScaleX() + se.getDeltaY() * 0.001);
             root.setScaleY(root.getScaleY() + se.getDeltaY() * 0.001);
@@ -119,6 +125,9 @@ public class Panel3D extends JPanel implements AddElementSubscriber, ChangeEleme
         });
 
         scene.setOnMousePressed(me -> {
+            popupMenuBar.setVisible(false);
+            popupMenuNode.setVisible(false);
+
             mousePosX = me.getSceneX();
             mousePosY = me.getSceneY();
             mouseOldX = me.getSceneX();
@@ -126,15 +135,58 @@ public class Panel3D extends JPanel implements AddElementSubscriber, ChangeEleme
 
             PickResult p = me.getPickResult();
             if (p.getIntersectedNode() != null) {
+
                 Node n = p.getIntersectedNode();
                 if (me.isPrimaryButtonDown()) {
                     changeColor(n);
+                    if (n instanceof Selecteble) {
+                        translating = n;
+                        if (me.isShiftDown()) {
+                            Platform.runLater(() -> {
+                                translateGroup.setTranslateX(n.getTranslateX());
+                                translateGroup.setTranslateY(n.getTranslateY());
+                                translateGroup.setTranslateZ(n.getTranslateZ());
+                                translateGroup.setVisible(true);
+                            });
+                        }
+                    } else {
+                        if (n instanceof Translateble) {
+                            double v = ((Translateble) n).getValue();
+                            int a = ((Translateble) n).axis();
+                            ru.pfur.skis.model.Node node = ((NodeBox) translating).getNode();
+                            Platform.runLater(() -> {
+
+                                switch (a) {
+                                    case 0: {
+                                        node.translate((int) (node.getX() + v), node.getY(), node.getZ());
+                                        translateGroup.setTranslateX(translateGroup.getTranslateX() + v);
+                                        break;
+                                    }
+                                    case 1: {
+                                        node.translate(node.getX(), (int) (node.getY() + v), node.getZ());
+                                        translateGroup.setTranslateY(translateGroup.getTranslateY() + v);
+                                        break;
+                                    }
+                                    case 2: {
+                                        node.translate(node.getX(), node.getY(), (int) (node.getZ() + v));
+                                        translateGroup.setTranslateZ(translateGroup.getTranslateZ() + v);
+                                        break;
+                                    }
+                                }
+                            });
+
+
+                        }
+                    }
+
                 }
                 if (me.isSecondaryButtonDown()) {
                     changeColor(n);
 
-
-                    menu.show(null, (int) me.getScreenX(), (int) me.getScreenY());
+                    if (n instanceof NodeBox)
+                        popupMenuNode.show(null, (int) me.getScreenX(), (int) me.getScreenY());
+                    else
+                        popupMenuBar.show(null, (int) me.getScreenX(), (int) me.getScreenY());
                 }
             }
         });
@@ -211,14 +263,52 @@ public class Panel3D extends JPanel implements AddElementSubscriber, ChangeEleme
                     break;
             }
         });
+
+        scene.setOnKeyReleased(event -> {
+            switch (event.getCode()) {
+                case SHIFT: {
+                    Platform.runLater(() -> translateGroup.setVisible(false));
+                    break;
+                }
+            }
+        });
     }
 
     public void initGUI() {
         buildCamera();
         buildAxes();
+        createTranslateGroup();
         createWorld();
+
         rootGroup.getChildren().add(world);
         rootGroup.setDepthTest(DepthTest.ENABLE);
+    }
+
+    private void createTranslateGroup() {
+
+        TranslateBox nxp = new TranslateBox(2, 0.5, 0.5, 1, 0);
+        nxp.setTranslateX(3);
+        nxp.setMaterial(translatingColorX);
+        TranslateBox nxn = new TranslateBox(2, 0.5, 0.5, -1, 0);
+        nxn.setTranslateX(-3);
+        nxn.setMaterial(translatingColorX);
+
+        TranslateBox nyp = new TranslateBox(0.5, 2, 0.5, 1, 1);
+        nyp.setTranslateY(3);
+        nyp.setMaterial(translatingColorY);
+        TranslateBox nyn = new TranslateBox(0.5, 2, 0.5, -1, 1);
+        nyn.setTranslateY(-3);
+        nyn.setMaterial(translatingColorY);
+
+        TranslateBox nzp = new TranslateBox(0.5, 0.5, 2, 1, 2);
+        nzp.setTranslateZ(3);
+        nzp.setMaterial(translatingColorZ);
+        TranslateBox nzn = new TranslateBox(0.5, 0.5, 2, -1, 2);
+        nzn.setTranslateZ(-3);
+        nzn.setMaterial(translatingColorZ);
+
+        translateGroup.getChildren().addAll(nxn, nxp, nyp, nyn, nzp, nzn);
+        translateGroup.setVisible(true);
     }
 
     private void buildCamera() {
@@ -306,6 +396,7 @@ public class Panel3D extends JPanel implements AddElementSubscriber, ChangeEleme
         world = new Xform();
         world.getChildren().addAll(axisGroup);
         world.getChildren().addAll(modelGroup);
+        world.getChildren().addAll(translateGroup);
         return world;
     }
 
@@ -363,19 +454,12 @@ public class Panel3D extends JPanel implements AddElementSubscriber, ChangeEleme
     @Override
     public void barNodeChanged(Model model, Bar bar) {
 
-        //1 find
-        //2 remove
-
         ObservableList<Node> children = modelGroup.getChildren();
         BarBox n = children.parallelStream().filter(p -> p instanceof BarBox).map(p -> (BarBox) p).filter(p -> p.getBar().equals(bar)).findFirst().get();
         Platform.runLater(() -> {
             modelGroup.getChildren().remove(n);
             createBar(bar);
         });
-
-
-        //3 create new
-
     }
 
     @Override

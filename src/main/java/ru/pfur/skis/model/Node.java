@@ -24,6 +24,7 @@ public class Node implements Selecteble {
 
         index = Service.getNextIndex();
         name = "node" + index;
+
     }
 
     public Model getModel() {
