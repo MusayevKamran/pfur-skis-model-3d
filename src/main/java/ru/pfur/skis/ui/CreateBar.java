@@ -15,8 +15,8 @@ import java.awt.*;
  */
 public class CreateBar extends JFrame implements ChangeElementSubscriber {
 
-    public static final int WIDTH = 500;
-    public static final int HEIGHT = 230;
+    public static final int WIDTH = 330;
+    public static final int HEIGHT = 170;
     JPanel panelForX;
     JPanel panelForY;
     JPanel panelForZ;
@@ -43,19 +43,18 @@ public class CreateBar extends JFrame implements ChangeElementSubscriber {
         setSize(new Dimension(WIDTH, HEIGHT));
         setLayout(new FlowLayout());
         this.model = model;
-        panelForX = new JPanel();
-        labelX1 = new JLabel("Node 1  =");
-        labelX1.setPreferredSize(new Dimension(30, 30));
+
+        panelForX = new JPanel(new GridLayout(2, 2));
+        labelX1 = new JLabel("Node 1");
         panelForX.add(labelX1);
-        textFieldGetX1 = new JTextField("15");
-        textFieldGetX1.setPreferredSize(new Dimension(170, 30));
+        textFieldGetX1 = new JTextField("");
         panelForX.add(textFieldGetX1);
 
-        labelX2 = new JLabel("Node 2  =");
-        labelX2.setPreferredSize(new Dimension(30, 30));
+        labelX2 = new JLabel("Node 2");
+        labelX2.setPreferredSize(new Dimension(15, 30));
         panelForX.add(labelX2);
-        textFieldGetX2 = new JTextField("15");
-        textFieldGetX2.setPreferredSize(new Dimension(170, 30));
+        textFieldGetX2 = new JTextField("");
+        textFieldGetX2.setPreferredSize(new Dimension(100, 30));
         panelForX.add(textFieldGetX2);
 
         panelForY = new JPanel();

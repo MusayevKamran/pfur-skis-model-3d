@@ -11,41 +11,31 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
-
 /**
- * Created by Kamran on 5/28/2016.
+ * Created by Kamran on 6/4/2016.
  */
-public class NodeProperties extends JPopupMenu implements FocusListener, ChangeElementSubscriber {
+public class BarProperties extends JPopupMenu implements FocusListener, ChangeElementSubscriber {
+
     private JMenuItem infoItem;
-    private JMenuItem properties;
     private JMenuItem removeItem;
     private JMenuItem closeItem;
     private Model model;
-    private Node node;
+    private Bar bar;
 
-    public NodeProperties(Model model) {
+    public BarProperties(Model model) {
         super();
         this.model = model;
         model.subscribeChangeElement(this);
         infoItem = new JMenuItem();
         infoItem.setEnabled(false);
 
-        properties = new JMenuItem("Properties");
         removeItem = new JMenuItem("Remove");
         closeItem = new JMenuItem("Close");
 
-        properties.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CreateNode t = new CreateNode("Node", node);
-                t.setVisible(true);
-                hideit();
-            }
-        });
         removeItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                model.removeNode(node);
+                model.removeBar(bar);
                 hideit();
             }
         });
@@ -55,28 +45,13 @@ public class NodeProperties extends JPopupMenu implements FocusListener, ChangeE
                 hideit();
             }
         });
+
         add(infoItem);
-        addSeparator();
-        add(properties);
         addSeparator();
         add(removeItem);
         addSeparator();
         add(closeItem);
-
-
     }
-
-
-    @Override
-    public void hide() {
-
-//        this.removeWindowFocusListener( this );
-    }
-
-    private void hideit() {
-        this.setVisible(false);
-    }
-
 
     @Override
     public void focusGained(FocusEvent e) {
@@ -85,18 +60,18 @@ public class NodeProperties extends JPopupMenu implements FocusListener, ChangeE
 
     @Override
     public void focusLost(FocusEvent e) {
-        hideit();
+
     }
 
     @Override
     public void nodeSelectedChanged(Model model, Node node) {
-        this.node = node;
-        infoItem.setText(node.getName());
+
     }
 
     @Override
     public void barSelectedChanged(Model model, Bar bar) {
-
+        this.bar = bar;
+        infoItem.setText(bar.getName());
     }
 
     @Override
@@ -107,5 +82,9 @@ public class NodeProperties extends JPopupMenu implements FocusListener, ChangeE
     @Override
     public void barNodeChanged(Model model, Bar bar) {
 
+    }
+
+    private void hideit() {
+        this.setVisible(false);
     }
 }

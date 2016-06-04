@@ -15,7 +15,6 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 public class FrameDesign extends JFrame {
-    JPanel panelButton;
     Panel3D fxPanel;
     JPanel panel3D;
     JMenuBar menuBar;

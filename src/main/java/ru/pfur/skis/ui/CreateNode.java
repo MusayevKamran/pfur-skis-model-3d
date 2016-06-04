@@ -74,7 +74,7 @@ public class CreateNode extends JFrame {
         labelX = new JLabel("X  =");
         labelX.setPreferredSize(new Dimension(25, 30));
         panelForX.add(labelX);
-        textFieldGetX = new JTextField("15");
+        textFieldGetX = new JTextField("");
         textFieldGetX.setPreferredSize(new Dimension(170, 30));
         panelForX.add(textFieldGetX);
 
@@ -82,7 +82,7 @@ public class CreateNode extends JFrame {
         labelY = new JLabel("Y  = ");
         labelY.setPreferredSize(new Dimension(25, 30));
         panelForY.add(labelY);
-        textFieldGetY = new JTextField("15");
+        textFieldGetY = new JTextField("");
         textFieldGetY.setPreferredSize(new Dimension(170, 30));
         panelForY.add(textFieldGetY);
 
@@ -90,7 +90,7 @@ public class CreateNode extends JFrame {
         labelZ = new JLabel("Z  =");
         labelZ.setPreferredSize(new Dimension(25, 30));
         panelForZ.add(labelZ);
-        textFieldGetZ = new JTextField("15");
+        textFieldGetZ = new JTextField("");
         textFieldGetZ.setPreferredSize(new Dimension(170, 30));
         panelForZ.add(textFieldGetZ);
 
@@ -142,8 +142,6 @@ public class CreateNode extends JFrame {
                 node.translate(x, y, z);
             }
         }
-
-
     }
 
     private void hideThis() {
