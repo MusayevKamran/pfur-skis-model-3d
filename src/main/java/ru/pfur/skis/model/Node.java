@@ -27,6 +27,11 @@ public class Node implements Selecteble {
 
     }
 
+    public Node(int x, int y, int z, String name) {
+        this(x, y, z);
+        this.name = name;
+    }
+
     public Model getModel() {
         return model;
     }

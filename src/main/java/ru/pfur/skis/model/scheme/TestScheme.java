@@ -11,8 +11,8 @@ import ru.pfur.skis.model.Node;
  */
 public class TestScheme implements Scheme {
     public TestScheme(Model model) {
-//        generate(model);
-        action(model);
+        generate(model);
+//        action(model);
     }
 
     @Override

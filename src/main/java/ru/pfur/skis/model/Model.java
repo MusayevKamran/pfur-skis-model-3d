@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 public class Model {
     private List<Node> nodes = new ArrayList();
     private List<Bar> bars = new ArrayList();
-
     private List<AddElementSubscriber> addSubscribers = new LinkedList<>();
     private List<RemoveElementSubscriber> removeSubscribers = new LinkedList<>();
     private List<ChangeElementSubscriber> changeSubscribers = new LinkedList<>();
@@ -127,5 +126,30 @@ public class Model {
 
     public void barNodeChanged(Bar bar) {
         changeSubscribers.forEach(p -> p.barNodeChanged(this, bar));
+    }
+
+
+    public List<AddElementSubscriber> getAddSubscribers() {
+        return addSubscribers;
+    }
+
+    public void setAddSubscribers(List<AddElementSubscriber> addSubscribers) {
+        this.addSubscribers = addSubscribers;
+    }
+
+    public List<RemoveElementSubscriber> getRemoveSubscribers() {
+        return removeSubscribers;
+    }
+
+    public void setRemoveSubscribers(List<RemoveElementSubscriber> removeSubscribers) {
+        this.removeSubscribers = removeSubscribers;
+    }
+
+    public List<ChangeElementSubscriber> getChangeSubscribers() {
+        return changeSubscribers;
+    }
+
+    public void setChangeSubscribers(List<ChangeElementSubscriber> changeSubscribers) {
+        this.changeSubscribers = changeSubscribers;
     }
 }

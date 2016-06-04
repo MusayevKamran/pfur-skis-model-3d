@@ -17,6 +17,7 @@ import ru.pfur.skis.model.Model;
 import ru.pfur.skis.model.Selecteble;
 import ru.pfur.skis.observer.AddElementSubscriber;
 import ru.pfur.skis.observer.ChangeElementSubscriber;
+import ru.pfur.skis.observer.ModelSubscriber;
 import ru.pfur.skis.observer.RemoveElementSubscriber;
 import ru.pfur.skis.ui.primitiv.BarBox;
 import ru.pfur.skis.ui.primitiv.NodeBox;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 /**
  * Created by Kamran on 4/24/2016.
  */
-public class Panel3D extends JPanel implements AddElementSubscriber, ChangeElementSubscriber, RemoveElementSubscriber {
+public class Panel3D extends JPanel implements AddElementSubscriber, ChangeElementSubscriber, RemoveElementSubscriber, ModelSubscriber {
 
     private static final double CAMERA_INITIAL_DISTANCE = -450;
     private static final double CAMERA_INITIAL_X_ANGLE = 70.0;
@@ -359,6 +360,7 @@ public class Panel3D extends JPanel implements AddElementSubscriber, ChangeEleme
     }
 
     private void createBar(Bar bar) {
+        System.out.println("ADDDDDD");
         ru.pfur.skis.model.Node n1 = bar.nodeStart;
         ru.pfur.skis.model.Node n2 = bar.nodeEnd;
         Point3D p1 = new Point3D(n1.x, n1.y, n1.z);
@@ -407,7 +409,14 @@ public class Panel3D extends JPanel implements AddElementSubscriber, ChangeEleme
 
     @Override
     public void addBar(Model model, Bar bar) {
-        Platform.runLater(() -> createBar(bar));
+        Platform.runLater(() -> {
+
+            try {
+                createBar(bar);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override
@@ -474,5 +483,20 @@ public class Panel3D extends JPanel implements AddElementSubscriber, ChangeEleme
         ObservableList<Node> children = modelGroup.getChildren();
         BarBox n = children.parallelStream().filter(p -> p instanceof BarBox).map(p -> (BarBox) p).filter(p -> p.getBar().equals(bar)).findFirst().get();
         Platform.runLater(() -> modelGroup.getChildren().remove(n));
+    }
+
+    @Override
+    public void modelCreated(Model model) {
+        Platform.runLater(() -> modelGroup.getChildren().removeAll(modelGroup.getChildren()));
+    }
+
+    @Override
+    public void modelLoaded(Model model) {
+
+    }
+
+    @Override
+    public void modelSaved(Model model) {
+
     }
 }

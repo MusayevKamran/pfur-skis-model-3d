@@ -7,14 +7,18 @@ import ru.pfur.skis.command.UndoCommand;
 import ru.pfur.skis.model.Bar;
 import ru.pfur.skis.model.Model;
 import ru.pfur.skis.model.Node;
+import ru.pfur.skis.observer.ModelSubscriber;
+import ru.pfur.skis.service.ModelService;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
-public class FrameDesign extends JFrame {
+public class FrameDesign extends JFrame implements ModelSubscriber {
+    JPanel panelButton;
     Panel3D fxPanel;
     JPanel panel3D;
     JMenuBar menuBar;
@@ -32,9 +36,12 @@ public class FrameDesign extends JFrame {
     JButton createTruss;
     CreateNode createNodeWindow;
     private Model model = null;
+    private ModelService modelService;
 
     FrameDesign(Model model) {
         this.model = model;
+        modelService = new ModelService(model);
+        modelService.subscribe(this);
         setTitle("3D Design");
         setPreferredSize(new Dimension(1500, 720));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,6 +64,7 @@ public class FrameDesign extends JFrame {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         fxPanel = new Panel3D(model, screenSize);
         panel3D.add(fxPanel, BorderLayout.CENTER);
+        modelService.subscribe(fxPanel);
         add(panel3D, BorderLayout.CENTER);
     }
 
@@ -65,15 +73,35 @@ public class FrameDesign extends JFrame {
         JButton newButton = createButton("new");
         getContentPane().add(toolBar, BorderLayout.NORTH);
         toolBar.add(newButton);
+        newButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                modelService.create();
+            }
+        });
 
 
         JButton openButton = createButton("open");
         getContentPane().add(toolBar, BorderLayout.NORTH);
         toolBar.add(openButton);
+        openButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadModel();
+            }
+        });
 
         JButton saveButton = createButton("save");
         getContentPane().add(toolBar, BorderLayout.NORTH);
         toolBar.add(saveButton);
+
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveModel();
+
+            }
+        });
 
         toolBar.addSeparator();
 
@@ -154,6 +182,32 @@ public class FrameDesign extends JFrame {
         toolBar.add(createTruss);
     }
 
+    private void loadModel() {
+        JFileChooser fileChooser = new JFileChooser();
+        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            try {
+                modelService.load(file);
+                JOptionPane.showMessageDialog(this, "File: " + file.getName() + " was load successfully!", "Load finished!", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error to load file: " + file.getName() + "!", "Load error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void saveModel() {
+        JFileChooser fileChooser = new JFileChooser();
+        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            try {
+                modelService.save(file);
+                JOptionPane.showMessageDialog(this, "File: " + file.getName() + " was save successfully!", "Save finished!", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error to save file: " + file.getName() + "!", "Save error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
     private void doAction() {
         fxPanel.rotateAnimation();
         Thread n = new Thread(new Runnable() {
@@ -223,5 +277,20 @@ public class FrameDesign extends JFrame {
         button.setIcon(icon);
         button.setToolTipText(Character.toUpperCase(type.charAt(0)) + type.substring(1));
         return button;
+    }
+
+    @Override
+    public void modelCreated(Model model) {
+        this.model = model;
+    }
+
+    @Override
+    public void modelLoaded(Model model) {
+
+    }
+
+    @Override
+    public void modelSaved(Model model) {
+
     }
 }
