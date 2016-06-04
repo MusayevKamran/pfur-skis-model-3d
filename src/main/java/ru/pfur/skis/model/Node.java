@@ -34,18 +34,6 @@ public class Node implements Selecteble {
         this.model = model;
     }
 
-    @Override
-    public String toString() {
-        return "Node{" +
-                "y=" + y +
-                ", x=" + x +
-                ", z=" + z +
-                ", selected=" + selected +
-                ", load=" + load +
-                ", support=" + support +
-                '}';
-    }
-
     public void removeLoad() {
         load = null;
     }
@@ -119,5 +107,28 @@ public class Node implements Selecteble {
     public void selected() {
         this.selected = !this.selected;
         model.nodeSelectedChanged(this);
+    }
+
+    public void translate(int x, int y, int z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        model.nodeTranslateChanged(this);
+
+    }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                ", selected=" + selected +
+                ", load=" + load +
+                ", support=" + support +
+                ", model=" + model +
+                ", index=" + index +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

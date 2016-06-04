@@ -31,6 +31,7 @@ public class FrameDesign extends JFrame {
     JButton createNode;
     JButton createBar;
     JButton createTruss;
+    CreateNode createNodeWindow;
     private Model model = null;
 
     FrameDesign(Model model) {
@@ -38,7 +39,7 @@ public class FrameDesign extends JFrame {
         setTitle("3D Design");
         setPreferredSize(new Dimension(1500, 720));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        createNodeWindow = new CreateNode("Node", model);
         createMenu();
         createToolBar(model);
         create3dPanel(model);
@@ -112,7 +113,6 @@ public class FrameDesign extends JFrame {
         getContentPane().add(toolBar, BorderLayout.NORTH);
         toolBar.add(pasteButton);
 
-
         toolBar.addSeparator();
 
         JButton action = createButton("action");
@@ -129,7 +129,7 @@ public class FrameDesign extends JFrame {
         createNode.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new CreateNode("Node", model);
+                createNodeWindow.setVisible(true);
             }
         });
 
@@ -160,26 +160,11 @@ public class FrameDesign extends JFrame {
         Thread n = new Thread(new Runnable() {
             @Override
             public void run() {
-//                for (int i = 0; i < 10; i++){
-//                    for (int j = 0; j < 10; j++){
-//                        for (int k = 0; k < 10; k++){
-//                            new AddNodeCommand(model, new Node(i*3,j*3,k*3));
-//                            try {
-//                                Thread.currentThread().sleep(10);
-//                            } catch (InterruptedException e1) {
-//                                e1.printStackTrace();
-//                            }
-//                        }
-//                    }
-//                }
-
                 double t = 0;
                 double s = 0;
                 Node prev = null;
                 int num = 0;
                 double f = (Math.PI / 2 - (-Math.PI / 2)) / 200;
-
-
                 for (t = (-Math.PI / 2); t < (Math.PI / 2); t = t + f) {
                     for (s = 0; s < (Math.PI / 2); s = s + 0.05) {
 

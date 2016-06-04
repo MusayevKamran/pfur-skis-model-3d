@@ -15,8 +15,8 @@ import java.awt.image.BufferedImage;
  */
 public class CreateTruss  extends JFrame{
 
-    public static final int WIDTH = 300;
-    public static final int HEIGHT = 250;
+    public static final int WIDTH = 570;
+    public static final int HEIGHT = 400;
 
     JPanel panelForX;
     JPanel panelForY;
@@ -63,7 +63,7 @@ public class CreateTruss  extends JFrame{
         button1.setPreferredSize(new Dimension(270, 100));
         buttonPanel.add(button1);
 
-        JButton button2 = new JButton("Test2");
+        JButton button2 = new JButton("Animation");
         button2.setPreferredSize(new Dimension(270, 100));
         buttonPanel.add(button2);
 

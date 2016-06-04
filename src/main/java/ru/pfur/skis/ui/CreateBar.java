@@ -9,8 +9,6 @@ import ru.pfur.skis.observer.ChangeElementSubscriber;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Created by Kamran on 5/7/2016.
@@ -34,6 +32,7 @@ public class CreateBar extends JFrame implements ChangeElementSubscriber {
     private JTextField textFieldGetX1;
     private JTextField textFieldGetX2;
     private Model model;
+    private Bar bar;
 
     public CreateBar(String s, Model model) throws HeadlessException {
         super(s);
@@ -65,19 +64,26 @@ public class CreateBar extends JFrame implements ChangeElementSubscriber {
         panelForButtons = new JPanel();
         buttonAdd = new JButton("ADD");
         buttonAdd.setPreferredSize(new Dimension(80, 30));
+        buttonAdd.addActionListener(e -> {
+            new AddBarCommand(model, new Bar(n1, n2));
+            n1.selected();
+            n2.selected();
+            hideThis();
+        });
 
         buttonApply = new JButton("APPLY");
         buttonApply.setPreferredSize(new Dimension(80, 30));
-        buttonApply.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new AddBarCommand(model, new Bar(n1, n2));
-                n1.selected();
-                n2.selected();
-            }
+        buttonApply.addActionListener(e -> {
+            new AddBarCommand(model, new Bar(n1, n2));
+            n1.selected();
+            n2.selected();
+
         });
         buttonClose = new JButton("CLOSE");
         buttonClose.setPreferredSize(new Dimension(80, 30));
+        buttonClose.addActionListener(e -> {
+            hideThis();
+        });
 
         panelForButtons.add(buttonAdd);
         panelForButtons.add(buttonApply);
@@ -108,8 +114,23 @@ public class CreateBar extends JFrame implements ChangeElementSubscriber {
         }
     }
 
+    private void hideThis() {
+        this.setVisible(false);
+    }
+
     @Override
     public void barSelectedChanged(Model model, Bar bar) {
 
     }
+
+    @Override
+    public void nodeTranslateChanged(Model model, Node node) {
+
+    }
+
+    @Override
+    public void barNodeChanged(Model model, Bar bar) {
+
+    }
+
 }

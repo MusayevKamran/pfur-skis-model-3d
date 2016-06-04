@@ -348,17 +348,47 @@ public class Panel3D extends JPanel implements AddElementSubscriber, ChangeEleme
     }
 
     @Override
-    public void removeNode(Model model, ru.pfur.skis.model.Node node) {
+    public void nodeTranslateChanged(Model model, ru.pfur.skis.model.Node node) {
         ObservableList<Node> children = modelGroup.getChildren();
         NodeBox n = children.parallelStream().filter(p -> p instanceof NodeBox).map(p -> (NodeBox) p).filter(p -> p.getNode().equals(node)).findFirst().get();
 
-        Platform.runLater(() ->
-                modelGroup.getChildren().remove(n));
+        Platform.runLater(() -> {
+            n.translateXProperty().setValue(node.getX());
+            n.translateYProperty().setValue(node.getY());
+            n.translateZProperty().setValue(node.getZ());
+        });
 
     }
 
     @Override
-    public void removeBar(Model model, Bar bar) {
+    public void barNodeChanged(Model model, Bar bar) {
 
+        //1 find
+        //2 remove
+
+        ObservableList<Node> children = modelGroup.getChildren();
+        BarBox n = children.parallelStream().filter(p -> p instanceof BarBox).map(p -> (BarBox) p).filter(p -> p.getBar().equals(bar)).findFirst().get();
+        Platform.runLater(() -> {
+            modelGroup.getChildren().remove(n);
+            createBar(bar);
+        });
+
+
+        //3 create new
+
+    }
+
+    @Override
+    public void removeNode(Model model, ru.pfur.skis.model.Node node) {
+        ObservableList<Node> children = modelGroup.getChildren();
+        NodeBox n = children.parallelStream().filter(p -> p instanceof NodeBox).map(p -> (NodeBox) p).filter(p -> p.getNode().equals(node)).findFirst().get();
+        Platform.runLater(() -> modelGroup.getChildren().remove(n));
+    }
+
+    @Override
+    public void removeBar(Model model, Bar bar) {
+        ObservableList<Node> children = modelGroup.getChildren();
+        BarBox n = children.parallelStream().filter(p -> p instanceof BarBox).map(p -> (BarBox) p).filter(p -> p.getBar().equals(bar)).findFirst().get();
+        Platform.runLater(() -> modelGroup.getChildren().remove(n));
     }
 }

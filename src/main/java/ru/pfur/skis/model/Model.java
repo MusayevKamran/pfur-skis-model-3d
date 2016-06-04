@@ -10,9 +10,10 @@ import ru.pfur.skis.observer.ChangeElementSubscriber;
 import ru.pfur.skis.observer.RemoveElementSubscriber;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Model {
     private List<Node> nodes = new ArrayList();
@@ -44,25 +45,11 @@ public class Model {
     }
 
     public void removeNode(Node node) {
+        Set<Bar> removes;
+        removes = bars.stream().filter(p -> p.nodeEnd.equals(node) || p.nodeStart.equals(node)).collect(Collectors.toSet());
+        removes.forEach(this::removeBar);
+        nodes.remove(node);
         notifyRemoveNode(node);
-
-        ArrayList tmp = new ArrayList();
-        Iterator var3 = this.bars.iterator();
-
-        while (true) {
-            Bar bar;
-            do {
-                if (!var3.hasNext()) {
-                    this.bars.removeAll(tmp);
-                    this.nodes.remove(node);
-                    return;
-                }
-
-                bar = (Bar) var3.next();
-            } while (!node.equals(bar.nodeEnd) && !node.equals(bar.nodeStart));
-
-            tmp.add(bar);
-        }
     }
 
     public void subscribeAddElement(AddElementSubscriber subscriber) {
@@ -102,6 +89,7 @@ public class Model {
     }
 
 
+
     public List<Node> getNodes() {
         return nodes;
     }
@@ -124,5 +112,20 @@ public class Model {
 
     public void barSelectedChanged(Bar bar) {
         changeSubscribers.forEach(p -> p.barSelectedChanged(this, bar));
+    }
+
+    public void nodeTranslateChanged(Node node) {
+        changeSubscribers.forEach(p -> p.nodeTranslateChanged(this, node));
+        findAndNotifyBars(node);
+    }
+
+    private void findAndNotifyBars(Node node) {
+
+        bars.stream().filter(p -> p.nodeStart.equals(node) || p.nodeEnd.equals(node)).forEach(this::barNodeChanged);
+
+    }
+
+    public void barNodeChanged(Bar bar) {
+        changeSubscribers.forEach(p -> p.barNodeChanged(this, bar));
     }
 }
