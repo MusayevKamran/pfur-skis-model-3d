@@ -14,8 +14,6 @@ import java.awt.event.ActionListener;
  * Created by Kamran on 5/7/2016.
  */
 public class CreateNode extends JFrame {
-
-
     public static final int WIDTH = 300;
     public static final int HEIGHT = 230;
 

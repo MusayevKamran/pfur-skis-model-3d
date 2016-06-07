@@ -1,6 +1,7 @@
 package ru.pfur.skis.service;
 
 import com.google.gson.Gson;
+import ru.pfur.skis.command.AddNodeCommand;
 import ru.pfur.skis.model.Bar;
 import ru.pfur.skis.model.Model;
 import ru.pfur.skis.model.Node;
@@ -77,11 +78,11 @@ public class ModelService {
 
         for (Bar bar : model.getBars()) {
             NodeDTO n1 = new NodeDTO();
-            n1.setName(bar.getNodeEnd().getName());
-            n1.setIndex(bar.getNodeEnd().getIndex());
-            n1.setX(bar.getNodeEnd().getX());
-            n1.setY(bar.getNodeEnd().getY());
-            n1.setZ(bar.getNodeEnd().getZ());
+            n1.setName(bar.getNodeStart().getName());
+            n1.setIndex(bar.getNodeStart().getIndex());
+            n1.setX(bar.getNodeStart().getX());
+            n1.setY(bar.getNodeStart().getY());
+            n1.setZ(bar.getNodeStart().getZ());
 
             modelDTO.getNodes().add(n1);
 
@@ -91,6 +92,8 @@ public class ModelService {
             n2.setX(bar.getNodeEnd().getX());
             n2.setY(bar.getNodeEnd().getY());
             n2.setZ(bar.getNodeEnd().getZ());
+
+            modelDTO.getNodes().add(n2);
 
             BarDTO barDTO = new BarDTO();
             barDTO.setStartNode(n1);
@@ -113,7 +116,7 @@ public class ModelService {
         create();
 
         modelDTO.getNodes().forEach(p -> nodeMap.put(p.getName(), new Node(p.getX(), p.getY(), p.getZ(), p.getName())));
-
+        Collection<Node> nodes = nodeMap.values();
         for (BarDTO barDTO : modelDTO.bars) {
             Node n1 = nodeMap.get(barDTO.getStartNode().getName());
             Node n2 = nodeMap.get(barDTO.getEndNode().getName());
@@ -122,6 +125,14 @@ public class ModelService {
             model.addNode(n1);
             model.addNode(n2);
             model.addBar(b1);
+
+            nodes.remove(n1);
+            nodes.remove(n2);
+
+        }
+
+        for (Node node : nodes) {
+            new AddNodeCommand(model, node);
         }
 
     }

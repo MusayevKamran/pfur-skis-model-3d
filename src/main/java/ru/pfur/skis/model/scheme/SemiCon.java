@@ -30,7 +30,7 @@ public class SemiCon implements Scheme {
                 int x = (int) ((4 * (1 - t)) * 50);
                 int y = (int) (((4 - 2 * t) * Math.cos(Math.PI * s)) * 50);
                 int z = (int) ((Math.sin(Math.PI * s)) * 50);
-                Node n = new Node(x, y, z);
+                Node n = new Node(y, z, x);
                 new AddNodeCommand(model, n);
 
                 if (prev != null && prev != n) {
