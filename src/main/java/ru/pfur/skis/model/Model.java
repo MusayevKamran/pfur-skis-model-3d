@@ -55,13 +55,14 @@ public class Model {
         this.addSubscribers.add(subscriber);
     }
 
+    public void subscribeRemoveElement(RemoveElementSubscriber subscriber) {
+        this.removeSubscribers.add(subscriber);
+    }
+
     public void subscribeChangeElement(ChangeElementSubscriber subscriber) {
         this.changeSubscribers.add(subscriber);
     }
 
-    public void subscribeRemoveElement(RemoveElementSubscriber subscriber) {
-        this.removeSubscribers.add(subscriber);
-    }
 
     public void notifyAddNode(Node node) {
         for (AddElementSubscriber elem : addSubscribers) {
@@ -86,8 +87,6 @@ public class Model {
             elem.removeBar(this, bar);
         }
     }
-
-
 
     public List<Node> getNodes() {
         return nodes;

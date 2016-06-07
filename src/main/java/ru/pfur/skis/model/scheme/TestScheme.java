@@ -23,7 +23,6 @@ public class TestScheme implements Scheme {
         int num = 0;
         double f = (Math.PI / 2 - (-Math.PI / 2)) / 200;
 
-
         for (t = (-Math.PI / 2); t < (Math.PI / 2); t = t + f) {
             for (s = 0; s < (Math.PI / 2); s = s + 0.05) {
 

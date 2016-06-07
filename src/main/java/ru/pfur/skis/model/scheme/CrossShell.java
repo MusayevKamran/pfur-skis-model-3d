@@ -10,6 +10,10 @@ import ru.pfur.skis.model.Node;
  * Created by Kamran on 6/2/2016.
  */
 public class CrossShell implements Scheme {
+
+    public CrossShell(Model model) {
+        generate(model);
+    }
     @Override
     public void generate(Model model) {
         double t;

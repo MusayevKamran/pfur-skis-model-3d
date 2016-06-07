@@ -18,7 +18,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class FrameDesign extends JFrame implements ModelSubscriber {
-    JPanel panelButton;
     Panel3D fxPanel;
     JPanel panel3D;
     JMenuBar menuBar;
@@ -104,7 +103,6 @@ public class FrameDesign extends JFrame implements ModelSubscriber {
         });
 
         toolBar.addSeparator();
-
         JButton back = createButton("back");
         getContentPane().add(toolBar, BorderLayout.NORTH);
         toolBar.add(back);
