@@ -7,13 +7,9 @@ import ru.pfur.skis.model.Model;
 import ru.pfur.skis.model.Node;
 
 /**
- * Created by Kamran on 6/2/2016.
+ * Created by Kamran on 6/11/2016.
  */
-public class SemiCycloid implements Scheme {
-    public SemiCycloid(Model model) {
-        generate(model);
-    }
-
+public class Sphere implements Scheme {
     @Override
     public void generate(Model model) {
         double t;
@@ -24,9 +20,9 @@ public class SemiCycloid implements Scheme {
         for (t = 0; t < Math.PI / 3; t = t + 0.05) {
             for (s = 0; s < Math.PI; s = s + 0.05) {
                 num++;
-                int x = (int) ((2 * (Math.PI * t + Math.sin(Math.PI * t)) * Math.sin(2 * Math.PI * s)) * 20);
+                int x = (int) ((2 * (3.1415 * t + Math.sin(Math.PI * t)) * Math.sin(2 * Math.PI * s)) * 20);
                 int y = (int) ((8 * (1 + Math.cos(Math.PI * t))) * 20);
-                int z = (int) ((2 * (Math.PI * t + Math.sin(Math.PI * t)) * Math.cos(2 * Math.PI * s)) * 20);
+                int z = (int) ((2 * (3.1415 * t + Math.sin(Math.PI * t)) * Math.cos(2 * Math.PI * s)) * 20);
                 Node n = new Node(x, y, z);
                 new AddNodeCommand(model, n);
 
