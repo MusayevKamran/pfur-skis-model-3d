@@ -1,10 +1,10 @@
 package ru.pfur.skis.ui;
 
-import ru.pfur.skis.command.AddBarCommand;
-import ru.pfur.skis.command.AddNodeCommand;
+import javafx.geometry.Point3D;
+import ru.pfur.skis.command.CopyNodesCommand;
 import ru.pfur.skis.command.RedoCommand;
+import ru.pfur.skis.command.TranslateNodesCommand;
 import ru.pfur.skis.command.UndoCommand;
-import ru.pfur.skis.model.Bar;
 import ru.pfur.skis.model.Model;
 import ru.pfur.skis.model.Node;
 import ru.pfur.skis.observer.ModelSubscriber;
@@ -16,6 +16,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class FrameDesign extends JFrame implements ModelSubscriber {
     Panel3D fxPanel;
@@ -39,6 +41,8 @@ public class FrameDesign extends JFrame implements ModelSubscriber {
 
     FrameDesign(Model model) {
         this.model = model;
+        TestTextFrame t = new TestTextFrame();
+        model.subscribeAddElement(t);
         modelService = new ModelService(model);
         modelService.subscribe(this);
         setTitle("3D Design");
@@ -178,6 +182,20 @@ public class FrameDesign extends JFrame implements ModelSubscriber {
         toolBar.add(createNode);
         toolBar.add(createBar);
         toolBar.add(createTruss);
+
+        JButton testButton = createButton("open");
+        getContentPane().add(toolBar, BorderLayout.NORTH);
+        toolBar.add(testButton);
+        testButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                List<Node> selected = model.getNodes().stream().filter(n -> n.isSelected()).collect(Collectors.toList());
+                new CopyNodesCommand(model, selected);
+                selected = model.getNodes().stream().filter(n -> n.isSelected()).collect(Collectors.toList());
+                new TranslateNodesCommand(model, selected, new Point3D(10, 10, 10));
+            }
+        });
     }
 
     private void loadModel() {
@@ -211,33 +229,63 @@ public class FrameDesign extends JFrame implements ModelSubscriber {
         Thread n = new Thread(new Runnable() {
             @Override
             public void run() {
-                double t = 0;
-                double s = 0;
-                Node prev = null;
-                int num = 0;
-                double f = (Math.PI / 2 - (-Math.PI / 2)) / 200;
-                for (t = (-Math.PI / 2); t < (Math.PI / 2); t = t + f) {
-                    for (s = 0; s < (Math.PI / 2); s = s + 0.05) {
-
-                        num++;
-                        int x = (int) ((1 + Math.cos(2 * (Math.PI / 2 * t))) * Math.cos(2 * (2 * Math.PI * s)) * 100);
-                        int y = (int) ((1 + Math.cos(2 * (Math.PI / 2 * t))) * Math.sin(2 * (2 * Math.PI * s)) * 100);
-                        int z = (int) (Math.sin(2 * (Math.PI / 2 * t)) * Math.sin(2 * Math.PI * s) * 100);
-                        Node n = new Node(x, y, z);
-                        new AddNodeCommand(model, n);
-
-                        if (prev != null && prev != n) {
-                            new AddBarCommand(model, new Bar(prev, n));
-                            num++;
-                        }
-                        try {
-                            Thread.currentThread().sleep(50);
-                        } catch (InterruptedException e1) {
-                            e1.printStackTrace();
-                        }
-                        prev = n;
-                    }
-                }
+//                double t = 0;
+//                double s = 0;
+//                Node prev = null;
+//                int num = 0;
+//                double f = (Math.PI / 2 - (-Math.PI / 2)) / 200;
+//                for (t = (-Math.PI / 2); t < (Math.PI / 2); t = t + f) {
+//                    for (s = 0; s < (Math.PI / 2); s = s + 0.05) {
+//
+//                        num++;
+//                        int x = (int) ((1 + Math.cos(2 * (Math.PI / 2 * t))) * Math.cos(2 * (2 * Math.PI * s)) * 100);
+//                        int y = (int) ((1 + Math.cos(2 * (Math.PI / 2 * t))) * Math.sin(2 * (2 * Math.PI * s)) * 100);
+//                        int z = (int) (Math.sin(2 * (Math.PI / 2 * t)) * Math.sin(2 * Math.PI * s) * 100);
+//                        Node n = new Node(x, y, z);
+//                        new AddNodeCommand(model, n);
+//
+//                        if (prev != null && prev != n) {
+//                            new AddBarCommand(model, new Bar(prev, n));
+//                            num++;
+//                        }
+//                        try {
+//                            Thread.currentThread().sleep(50);
+//                        } catch (InterruptedException e1) {
+//                            e1.printStackTrace();
+//                        }
+//                        prev = n;
+//                    }
+//                }
+//
+//                double t;
+//                double s;
+//                Node prev = null;
+//                int num = 0;
+//
+//                double f = (Math.PI / 2) / 100;
+//
+//                for (t = 0; t < (Math.PI * 2); t = t + 0.1) {
+//                    for (s = 0; s < Math.PI * 2; s = s + 0.1) {
+//                        num++;
+////                        int x = (int) ((Math.sin(Math.PI / 2 * t) * Math.cos(Math.PI * s)) * 50);
+////                        int y = (int) ((Math.sin(Math.PI / 2 * t) * Math.cos(Math.PI * s)) * 50);
+//                        int z = (int)Math.sqrt( 4 - t * t - s * s   );
+//
+//                        Node n = new Node((int) (t * 50), (int) (s * 50), z);
+//                        new AddNodeCommand(model, n);
+//
+//                        if (prev != null && prev != n) {
+//                            new AddBarCommand(model, new Bar(prev, n));
+//                            num++;
+//                        }
+//                        try {
+//                            Thread.currentThread().sleep(50);
+//                        } catch (InterruptedException e1) {
+//                            e1.printStackTrace();
+//                        }
+//                        prev = n;
+//                    }
+//                }
             }
         });
         n.start();
