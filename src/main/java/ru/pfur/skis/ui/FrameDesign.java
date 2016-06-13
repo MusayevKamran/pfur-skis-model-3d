@@ -1,14 +1,12 @@
 package ru.pfur.skis.ui;
 
-import javafx.geometry.Point3D;
-import ru.pfur.skis.command.CopyNodesCommand;
 import ru.pfur.skis.command.RedoCommand;
-import ru.pfur.skis.command.TranslateNodesCommand;
 import ru.pfur.skis.command.UndoCommand;
 import ru.pfur.skis.model.Model;
 import ru.pfur.skis.model.Node;
 import ru.pfur.skis.observer.ModelSubscriber;
 import ru.pfur.skis.service.ModelService;
+import ru.pfur.skis.service.SCADExporter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,8 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.io.FileNotFoundException;
 
 public class FrameDesign extends JFrame implements ModelSubscriber {
     Panel3D fxPanel;
@@ -36,6 +33,7 @@ public class FrameDesign extends JFrame implements ModelSubscriber {
     JButton createBar;
     JButton createTruss;
     CreateNode createNodeWindow;
+    Node node;
     private Model model = null;
     private ModelService modelService;
 
@@ -129,20 +127,6 @@ public class FrameDesign extends JFrame implements ModelSubscriber {
         });
         toolBar.addSeparator();
 
-        JButton cutButton = createButton("cut");
-        getContentPane().add(toolBar, BorderLayout.NORTH);
-        toolBar.add(cutButton);
-
-        JButton copyButton = createButton("copy");
-        getContentPane().add(toolBar, BorderLayout.NORTH);
-        toolBar.add(copyButton);
-
-
-        JButton pasteButton = createButton("paste");
-        getContentPane().add(toolBar, BorderLayout.NORTH);
-        toolBar.add(pasteButton);
-
-        toolBar.addSeparator();
 
         JButton action = createButton("action");
         getContentPane().add(toolBar, BorderLayout.NORTH);
@@ -183,19 +167,37 @@ public class FrameDesign extends JFrame implements ModelSubscriber {
         toolBar.add(createBar);
         toolBar.add(createTruss);
 
-        JButton testButton = createButton("open");
+        JButton translateButton = createButton("translate");
         getContentPane().add(toolBar, BorderLayout.NORTH);
-        toolBar.add(testButton);
-        testButton.addActionListener(new ActionListener() {
+        toolBar.add(translateButton);
+        translateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                List<Node> selected = model.getNodes().stream().filter(n -> n.isSelected()).collect(Collectors.toList());
-                new CopyNodesCommand(model, selected);
-                selected = model.getNodes().stream().filter(n -> n.isSelected()).collect(Collectors.toList());
-                new TranslateNodesCommand(model, selected, new Point3D(10, 10, 10));
+                CopyTranslateWindow translateNode = new CopyTranslateWindow("Node", model);
+                translateNode.setVisible(true);
             }
         });
+        JButton selectAll = createButton("translate");
+        getContentPane().add(toolBar, BorderLayout.NORTH);
+        toolBar.add(selectAll);
+        selectAll.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SCADExporter exporter = new SCADExporter();
+                try {
+                    exporter.export(model, new File("test.txt"));
+                } catch (FileNotFoundException e1) {
+                    e1.printStackTrace();
+                }
+//                selectAllModel();
+            }
+        });
+    }
+
+    private void selectAllModel() {
+        for (Node node : model.getNodes()) {
+            node.selected();
+        }
     }
 
     private void loadModel() {
