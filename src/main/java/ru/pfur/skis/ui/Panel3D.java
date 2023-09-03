@@ -15,6 +15,7 @@ import javafx.scene.transform.Translate;
 import ru.pfur.skis.model.Bar;
 import ru.pfur.skis.model.Model;
 import ru.pfur.skis.model.Selecteble;
+import ru.pfur.skis.model.Xform;
 import ru.pfur.skis.observer.AddElementSubscriber;
 import ru.pfur.skis.observer.ChangeElementSubscriber;
 import ru.pfur.skis.observer.ModelSubscriber;
@@ -22,7 +23,7 @@ import ru.pfur.skis.observer.RemoveElementSubscriber;
 import ru.pfur.skis.ui.primitiv.BarBox;
 import ru.pfur.skis.ui.primitiv.NodeBox;
 import ru.pfur.skis.ui.primitiv.TranslateBox;
-import ru.pfur.test.Xform;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -355,7 +356,7 @@ public class Panel3D extends JPanel implements AddElementSubscriber, ChangeEleme
     private void buildModel() {
         ArrayList<ru.pfur.skis.model.Node> nodes = (ArrayList<ru.pfur.skis.model.Node>) model.getNodes();
         nodes.forEach(this::createNode);
-        ArrayList<ru.pfur.skis.model.Bar> bars = (ArrayList<ru.pfur.skis.model.Bar>) model.getBars();
+        ArrayList<Bar> bars = (ArrayList<Bar>) model.getBars();
         bars.forEach(this::createBar);
     }
 

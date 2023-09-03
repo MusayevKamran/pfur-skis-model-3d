@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,8 +42,6 @@ public class FrameDesign extends JFrame implements ModelSubscriber {
 
     FrameDesign(Model model) {
         this.model = model;
-        TestTextFrame t = new TestTextFrame();
-        model.subscribeAddElement(t);
         modelService = new ModelService(model);
         modelService.subscribe(this);
         setTitle("3D Design");
@@ -183,19 +182,24 @@ public class FrameDesign extends JFrame implements ModelSubscriber {
         toolBar.add(createBar);
         toolBar.add(createTruss);
 
-        JButton testButton = createButton("open");
+
+        JButton translateButton = createButton("translate");
         getContentPane().add(toolBar, BorderLayout.NORTH);
-        toolBar.add(testButton);
-        testButton.addActionListener(new ActionListener() {
+        toolBar.add(translateButton);
+        translateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                List<Node> selected = model.getNodes().stream().filter(n -> n.isSelected()).collect(Collectors.toList());
-                new CopyNodesCommand(model, selected);
-                selected = model.getNodes().stream().filter(n -> n.isSelected()).collect(Collectors.toList());
-                new TranslateNodesCommand(model, selected, new Point3D(10, 10, 10));
+                CopyTranslateWindow translateNode = new CopyTranslateWindow("Node", model);
+                translateNode.setVisible(true);
             }
         });
+    }
+
+    private void selectAllModel() {
+        for (Node node : model.getNodes()) {
+            node.selected();
+        }
+
     }
 
     private void loadModel() {

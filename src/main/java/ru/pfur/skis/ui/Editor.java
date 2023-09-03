@@ -41,7 +41,7 @@ public class Editor extends JFrame implements ActionListener {
     }
 
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(() -> {
+        EventQueue.invokeLater(() -> {
             Model model = new Model();
             createTestModel(model);
 //            ellipsoid(model);
